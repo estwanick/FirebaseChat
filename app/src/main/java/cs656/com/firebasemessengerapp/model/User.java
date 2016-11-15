@@ -12,7 +12,7 @@ public class User {
 
     }
 
-    public User(String name, String email, HashMap<String, Object> timestampJoined){
+    public User(String name, String email){
         this.username = name;
         this.email = email;
         this.timestampJoined = timestampJoined;

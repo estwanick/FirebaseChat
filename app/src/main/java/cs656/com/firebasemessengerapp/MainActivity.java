@@ -15,15 +15,27 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import cs656.com.firebasemessengerapp.model.User;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     onSignedInInitialize(user.getDisplayName());
+                    createUser(user.getEmail());
                 } else {
                     // User is signed out
                     onSignedOutCleanup();
@@ -137,10 +150,49 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            AuthUI.getInstance().signOut(this);
-            return true;
+            AuthUI.getInstance()
+                    .signOut(this)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // user is now signed out
+                            startActivity(new Intent(MainActivity.this, MainActivity.class));
+                            finish();
+                        }
+                    });
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    private void createUser(String email){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        final DatabaseReference usersRef = database.getReference("users");
+        final String encodedEmail = encodeEmail(email);
+        final DatabaseReference userRef = usersRef.child(encodedEmail);
+
+//        User user = new User(encodeEmail(email), "email type 2");
+//        usersRef.push().setValue(user);
+
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue() == null){
+                    User user = new User(encodeEmail(encodedEmail), "email type 2");
+                    userRef.setValue(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
+    public static String encodeEmail(String userEmail) {
+        return userEmail.replace(".", ",");
     }
 }
