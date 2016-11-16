@@ -13,8 +13,13 @@
     tools:context="cs656.com.firebasemessengerapp.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
+    <ListView
+        android:id="@+id/conversationListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stackFromBottom="false"
+        android:divider="@android:color/transparent"
+        android:transcriptMode="alwaysScroll"
+        tools:listitem="@layout/conversation_item"/>
+
 </RelativeLayout>
