@@ -35,7 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import cs656.com.firebasemessengerapp.model.User;
-
+import cs656.com.firebasemessengerapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -144,7 +144,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.sign_out) {
+
             AuthUI.getInstance()
                     .signOut(this);
         }

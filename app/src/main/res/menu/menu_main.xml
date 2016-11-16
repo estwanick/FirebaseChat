@@ -3,8 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="cs656.com.firebasemessengerapp.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/sign_out"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/sign_out"
         app:showAsAction="never" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ListView
+            android:id="@+id/list_view_active_lists"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="none" />
+
+    </LinearLayout>
+
 </menu>
