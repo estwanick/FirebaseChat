@@ -49,6 +49,7 @@ import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.ui.AddConversationDialogFragment;
 import cs656.com.firebasemessengerapp.ui.ConversationAdapter;
+import cs656.com.firebasemessengerapp.ui.FriendsListActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,11 +66,6 @@ public class MainActivity extends AppCompatActivity {
     private ListView mConversationListView;
     private ConversationAdapter mConversationAdapter;
     private String mUsername;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,9 +208,15 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.listFriends) {
             //Open up activity where a user can add and view friends
+            ViewFriendsList();
         }
 
         return true;
+    }
+
+    private void ViewFriendsList(){
+        Intent intent = new Intent(this, FriendsListActivity.class);
+        startActivity(intent);
     }
 
     private void createUser(String email) {
