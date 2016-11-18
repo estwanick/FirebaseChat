@@ -7,16 +7,22 @@ import android.os.ConditionVariable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +47,7 @@ import java.util.List;
 
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.R;
+import cs656.com.firebasemessengerapp.ui.AddConversationDialogFragment;
 import cs656.com.firebasemessengerapp.ui.ConversationAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +65,11 @@ public class MainActivity extends AppCompatActivity {
     private ListView mConversationListView;
     private ConversationAdapter mConversationAdapter;
     private String mUsername;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +116,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+
+    }
+
+    public void showAddConversationDialog(View view) {
+        /* Create an instance of the dialog fragment and show it */
+        DialogFragment dialog = AddConversationDialogFragment.newInstance();
+        dialog.show(MainActivity.this.getFragmentManager(), "AddConversationDialogFragment");
     }
 
     private void attachDatabaseReadListener() {
@@ -116,10 +135,17 @@ public class MainActivity extends AppCompatActivity {
                     mConversationAdapter.add(singleUser); //Eventually switch to conversation class
                 }
 
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-                public void onChildRemoved(DataSnapshot dataSnapshot) {}
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-                public void onCancelled(DatabaseError databaseError) {}
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                }
+
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
+
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                }
+
+                public void onCancelled(DatabaseError databaseError) {
+                }
             };
             mConversationDatabaseReference.addChildEventListener(mChildEventListener);
         }
@@ -181,15 +207,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.sign_out) {
-
             AuthUI.getInstance()
                     .signOut(this);
+        }
+        if (id == R.id.listFriends) {
+            //Open up activity where a user can add and view friends
         }
 
         return true;
     }
 
-    private void createUser(String email){
+    private void createUser(String email) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference usersRef = database.getReference("users");
         final String encodedEmail = encodeEmail(email);
@@ -201,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() == null){
+                if (dataSnapshot.getValue() == null) {
                     User user = new User(encodeEmail(encodedEmail), "email type 2");
                     userRef.setValue(user);
                 }
@@ -214,10 +242,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     public static String encodeEmail(String userEmail) {
         return userEmail.replace(".", ",");
     }
+
 }

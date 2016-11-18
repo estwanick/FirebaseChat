@@ -42,6 +42,7 @@ dependencies {
 
     // FirebaseUI
     compile 'com.firebaseui:firebase-ui-auth:0.6.0'
+    compile 'com.google.android.gms:play-services-appindexing:9.6.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
