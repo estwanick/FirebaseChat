@@ -30,7 +30,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/icon_add"
-        android:onClick="showAddConversationDialog"
+        android:onClick="createNewConversation"
         app:borderWidth="0dp"
         app:elevation="6dp"
         app:pressedTranslationZ="12dp"

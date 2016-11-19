@@ -41,7 +41,7 @@ dependencies {
     compile 'com.google.firebase:firebase-config:9.6.0'
 
     // FirebaseUI
-    compile 'com.firebaseui:firebase-ui-auth:0.6.0'
+    compile 'com.firebaseui:firebase-ui:0.6.0'
     compile 'com.google.android.gms:play-services-appindexing:9.6.0'
 }
 

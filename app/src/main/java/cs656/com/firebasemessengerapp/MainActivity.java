@@ -48,6 +48,7 @@ import java.util.List;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.ui.AddConversationDialogFragment;
+import cs656.com.firebasemessengerapp.ui.ConversationActivity;
 import cs656.com.firebasemessengerapp.ui.ConversationAdapter;
 import cs656.com.firebasemessengerapp.ui.FriendsListActivity;
 
@@ -115,7 +116,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void showAddConversationDialog(View view) {
+    public void createNewConversation(View view){
+        Intent intent = new Intent(this, ConversationActivity.class);
+        startActivity(intent);
+    }
+
+    //Not being used
+    public void showAddConversationActicity(View view) {
         /* Create an instance of the dialog fragment and show it */
         DialogFragment dialog = AddConversationDialogFragment.newInstance();
         dialog.show(MainActivity.this.getFragmentManager(), "AddConversationDialogFragment");
