@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     onSignedInInitialize(user.getDisplayName());
-                    createUser(user.getEmail());
+                    createUser(user);
                 } else {
                     // User is signed out
                     //onSignedOutCleanup();
@@ -226,21 +226,19 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void createUser(String email) {
+    private void createUser(FirebaseUser user) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         final DatabaseReference usersRef = database.getReference("users");
-        final String encodedEmail = encodeEmail(email);
+        final String encodedEmail = encodeEmail(user.getEmail());
         final DatabaseReference userRef = usersRef.child(encodedEmail);
-
-//        User user = new User(encodeEmail(email), "email type 2");
-//        usersRef.push().setValue(user);
+        final String username = user.getDisplayName();
 
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null) {
-                    User user = new User(encodeEmail(encodedEmail), "email type 2");
-                    userRef.setValue(user);
+                    User newUser = new User(username, encodeEmail(encodedEmail));
+                    userRef.setValue(newUser);
                 }
             }
 
@@ -252,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+    //TODO: Used in multiple places, should probably move to its own class
     public static String encodeEmail(String userEmail) {
         return userEmail.replace(".", ",");
     }
