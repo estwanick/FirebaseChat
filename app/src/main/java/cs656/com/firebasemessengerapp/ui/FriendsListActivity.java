@@ -30,6 +30,7 @@ public class FriendsListActivity extends AppCompatActivity {
     private Toolbar mToolBar;
 
     private FirebaseListAdapter mFriendListAdapter;
+    private ValueEventListener mValueEventListener;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mUserDatabaseReference;
@@ -38,15 +39,13 @@ public class FriendsListActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_friends_activity);
-        mToolBar = (Toolbar) findViewById(R.id.toolbar);
+        initializeScreen();
+
         mToolBar.setTitle("Find new friends");
 
         //Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUserDatabaseReference = mFirebaseDatabase.getReference().child("users");
-
-        //Get list from view
-        mListView = (ListView) findViewById(R.id.friendsListView);
 
         mFriendListAdapter = new FirebaseListAdapter<User>(this, User.class, R.layout.friend_item, mUserDatabaseReference) {
             @Override
@@ -58,6 +57,24 @@ public class FriendsListActivity extends AppCompatActivity {
         };
         mListView.setAdapter(mFriendListAdapter);
 
+        mValueEventListener = mUserDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if(user == null){
+                    finish();
+                    return;
+                }
+                mFriendListAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
     }
 
     private void showAllUsers(){
@@ -66,6 +83,7 @@ public class FriendsListActivity extends AppCompatActivity {
 
     private void initializeScreen(){
         mListView = (ListView) findViewById(R.id.friendsListView);
+        mToolBar = (Toolbar) findViewById(R.id.toolbar);
     }
 
 }
