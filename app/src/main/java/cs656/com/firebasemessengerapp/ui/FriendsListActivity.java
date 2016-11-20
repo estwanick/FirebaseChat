@@ -55,8 +55,6 @@ public class FriendsListActivity extends AppCompatActivity {
     }
 
     private void showUserList(){
-        ArrayList<User> allUsers = new ArrayList<>();
-
         mFriendListAdapter = new FirebaseListAdapter<User>(this, User.class, R.layout.friend_item, mUserDatabaseReference) {
             @Override
             protected void populateView(View view, User user, final int position) {
@@ -119,7 +117,7 @@ public class FriendsListActivity extends AppCompatActivity {
         Log.e(TAG, "User logged in is: " + userLoggedIn);
         //final String newFriendEncodedEmail = encodeEmail(newFriendEmail);
         final DatabaseReference friendsRef = mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
-            + "/" + encodeEmail(userLoggedIn));
+                + "/" + encodeEmail(userLoggedIn));
         //Add friends to current users friends list
         friendsRef.child(encodeEmail(newFriendEmail)).setValue(newFriendEmail);
     }
