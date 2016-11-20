@@ -1,19 +1,18 @@
 package cs656.com.firebasemessengerapp.ui;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,7 +24,6 @@ import java.util.Map;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Chat;
-import cs656.com.firebasemessengerapp.model.Conversation;
 import cs656.com.firebasemessengerapp.model.Friend;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
@@ -35,7 +33,7 @@ import cs656.com.firebasemessengerapp.utils.Constants;
     the user can select the friends they want to start
     a new conversation with.
  */
-public class ConversationActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
     private String TAG = "New Conversation";
 
     private ListView mListView;
@@ -48,6 +46,7 @@ public class ConversationActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mFriendDatabaseReference;
     private TextView mFriendsInChat;
+    private EditText mChatName;
 
     //Objects for Chat
     private Chat mChat;
@@ -130,6 +129,8 @@ public class ConversationActivity extends AppCompatActivity {
         final DatabaseReference chatRef = mFirebaseDatabase.getReference(Constants.CHAT_LOCATION);
         final DatabaseReference pushRef = chatRef.push();
         final String pushKey = pushRef.getKey();
+        mChat.setUid(pushKey);
+        mChat.setChatName(mChatName.getText().toString());
         Log.e(TAG, "Push key is: " + pushKey);
 
         //Create HashMap for Pushing Conv
@@ -162,6 +163,7 @@ public class ConversationActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.conversationListView);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mFriendsInChat = (TextView) findViewById(R.id.friendsInChat);
-        mChat = new Chat("chatuid","Chat Name");
+        mChatName = (EditText) findViewById(R.id.chat_name);
+        mChat = new Chat("","");
     }
 }

@@ -21,6 +21,14 @@ public class Chat {
         this.friends = new ArrayList<Friend>();
     }
 
+    public void setChatName(String chatName) {
+        this.chatName = chatName;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public String getUid() {
         return uid;
     }

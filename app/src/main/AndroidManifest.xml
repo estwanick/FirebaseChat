@@ -24,7 +24,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".ui.ConversationActivity"
+            android:name=".ui.ChatActivity"
             android:label="Start Conversation"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
