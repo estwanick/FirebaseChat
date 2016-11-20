@@ -46,4 +46,9 @@ public class Chat {
         return false;
     }
 
+    public boolean removeFriend(Friend friend){
+        friends.remove(friend);
+        return true;
+    }
+
 }

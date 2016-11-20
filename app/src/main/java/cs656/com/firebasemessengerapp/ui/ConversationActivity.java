@@ -57,7 +57,7 @@ public class ConversationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_conversation);
         initializeScreen();
-        mToolBar.setTitle("New Conversation - Select Participants");
+        mToolBar.setTitle("Select Participants");
         showFriendsList();
     }
 
@@ -66,6 +66,7 @@ public class ConversationActivity extends AppCompatActivity {
             @Override
             protected void populateView(View view, final String friend, final int position) {
                 Log.e("TAG", friend);
+                final Friend addFriend = new Friend(friend);
                 ((TextView) view.findViewById(R.id.messageTextView)).setText(friend);
                 ((Button) view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -73,8 +74,8 @@ public class ConversationActivity extends AppCompatActivity {
                         Log.e(TAG, "Clicking row: " + position);
                         Log.e(TAG, "Clicking user: " + friend);
 
+                        //TODO: Complete the creating of Chat object, then add to firebase
                         //Add friend to chat
-                        Friend addFriend = new Friend(friend);
                         if(mChat.appendFriend(addFriend)){
                             mFriendsInChat.setText( mFriendsInChat.getText() + ", " + friend);
                         }
@@ -87,7 +88,9 @@ public class ConversationActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Log.e(TAG, "Clicking row: " + position);
                         Log.e(TAG, "Clicking user: " + friend);
-                        //Add this user to your friends list, by email
+                        //TODO: Add remove methods
+                        mChat.removeFriend(addFriend); //the name add Friend here is not appropriate
+                        Log.e(TAG, "Removing from chat: " + friend);
                     }
                 });
             }
