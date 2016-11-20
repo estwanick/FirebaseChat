@@ -34,6 +34,11 @@
         android:text="Add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/removeFriend"
+        android:text="Remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:orientation="horizontal"
