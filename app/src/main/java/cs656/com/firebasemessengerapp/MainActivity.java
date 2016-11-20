@@ -61,14 +61,14 @@ public class MainActivity extends AppCompatActivity {
         mChatDatabaseReference = mFirebaseDatabase.getReference().child(Constants.CHAT_LOCATION);
 
         //Initialize screen variables
-        mConversationListView = (ListView) findViewById(R.id.conversationListView);
+        mConversationListView = (ListView) findViewById(R.id.chatListView);
 
         //Create & Set firebase UI list adapter
 //        List<Chat> chatList = new ArrayList<>();
-//        mChatAdapter = new ChatAdapter(this, R.layout.conversation_item, chatList);
+//        mChatAdapter = new ChatAdapter(this, R.layout.chat_item, chatList);
 //        mConversationListView.setAdapter(mChatAdapter);
 
-        mChatAdapter = new FirebaseListAdapter<Chat>(this, Chat.class, R.layout.conversation_item, mChatDatabaseReference) {
+        mChatAdapter = new FirebaseListAdapter<Chat>(this, Chat.class, R.layout.chat_item, mChatDatabaseReference) {
             @Override
             protected void populateView(View view, Chat chat, final int position) {
                 //Log.e("TAG", "");
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //TODO: add logic to not show plus button if the user has no friends
-    public void createNewConversation(View view){
+    public void createNewChat(View view){
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
     }

@@ -54,7 +54,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_conversation);
+        setContentView(R.layout.add_chat);
         initializeScreen();
         showFriendsList();
     }

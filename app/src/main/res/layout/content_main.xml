@@ -14,12 +14,12 @@
     tools:showIn="@layout/activity_main">
 
     <ListView
-        android:id="@+id/conversationListView"
+        android:id="@+id/chatListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:stackFromBottom="false"
         android:divider="@android:color/transparent"
         android:transcriptMode="alwaysScroll"
-        tools:listitem="@layout/conversation_item"/>
+        tools:listitem="@layout/chat_item"/>
 
 </RelativeLayout>
