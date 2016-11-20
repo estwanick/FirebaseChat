@@ -24,6 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import cs656.com.firebasemessengerapp.R;
+import cs656.com.firebasemessengerapp.model.Chat;
 import cs656.com.firebasemessengerapp.model.Conversation;
 import cs656.com.firebasemessengerapp.model.Friend;
 import cs656.com.firebasemessengerapp.model.User;
@@ -48,6 +49,8 @@ public class ConversationActivity extends AppCompatActivity {
     private DatabaseReference mFriendDatabaseReference;
     private TextView mFriendsInChat;
 
+    //Objects for Chat
+    private Chat mChat;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -71,7 +74,10 @@ public class ConversationActivity extends AppCompatActivity {
                         Log.e(TAG, "Clicking user: " + friend);
 
                         mFriendsInChat.setText( mFriendsInChat.getText() + ", " + friend);
-
+                        //Add friend to chat
+                        Friend addFriend = new Friend(friend);
+                        mChat.appendFriend(addFriend);
+                        Log.e(TAG, "Adding to chat: " + friend);
                     }
                 });
                 ((Button) view.findViewById(R.id.removeFriend)).setOnClickListener(new View.OnClickListener() {
@@ -127,5 +133,6 @@ public class ConversationActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.conversationListView);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mFriendsInChat = (TextView) findViewById(R.id.friendsInChat);
+        mChat = new Chat("chatuid","Chat Name");
     }
 }

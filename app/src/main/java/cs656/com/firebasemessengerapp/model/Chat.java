@@ -1,5 +1,6 @@
 package cs656.com.firebasemessengerapp.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Chat {
@@ -7,6 +8,7 @@ public class Chat {
     private String uid;
     private String chatName;
     private List<Message> messages;
+    private List<Friend> friends;
 
     public Chat(){
 
@@ -15,6 +17,8 @@ public class Chat {
     public Chat(String uid, String chatName){
         this.uid = uid;
         this.chatName = chatName;
+        this.messages = new ArrayList<Message>();
+        this.friends = new ArrayList<Friend>();
     }
 
     public String getUid() {
@@ -27,5 +31,13 @@ public class Chat {
 
     public List<Message> getMessages() {
         return messages;
+    }
+
+    public List<Friend> getFriends() {
+        return friends;
+    }
+
+    public void appendFriend(Friend friend){
+        friends.add(friend);
     }
 }
