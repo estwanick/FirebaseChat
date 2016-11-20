@@ -135,16 +135,12 @@ public class ChatActivity extends AppCompatActivity {
 
         //Create HashMap for Pushing Conv
         HashMap<String, Object> chatItemMap = new HashMap<String, Object>();
-
-        //chatItemMap.put("/" + pushKey, pushKey);
-
-        //Turn Chat object into pojo
         HashMap<String,Object> chatObj = (HashMap<String, Object>) new ObjectMapper()
                 .convertValue(mChat, Map.class);
-
         chatItemMap.put("/" + pushKey, chatObj);
-
         chatRef.updateChildren(chatItemMap);
+
+        //Create corresponding message location for this chat
 
     }
 
