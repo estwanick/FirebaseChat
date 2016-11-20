@@ -10,11 +10,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.ui.database.FirebaseListAdapter;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +19,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Chat;
@@ -57,7 +57,6 @@ public class ConversationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_conversation);
         initializeScreen();
-        mToolBar.setTitle("Select Participants");
         showFriendsList();
     }
 
@@ -120,6 +119,31 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     private void removeFromConversation(){
+
+    }
+
+    //TODO: Add create new Chat function
+    public void createChat(View view){
+        //final String userLoggedIn = mFirebaseAuth.getCurrentUser().getEmail();
+        //Log.e(TAG, "User logged in is: " + userLoggedIn);
+        //final String newFriendEncodedEmail = encodeEmail(newFriendEmail);
+        final DatabaseReference chatRef = mFirebaseDatabase.getReference(Constants.CHAT_LOCATION);
+        final DatabaseReference pushRef = chatRef.push();
+        final String pushKey = pushRef.getKey();
+        Log.e(TAG, "Push key is: " + pushKey);
+
+        //Create HashMap for Pushing Conv
+        HashMap<String, Object> chatItemMap = new HashMap<String, Object>();
+
+        //chatItemMap.put("/" + pushKey, pushKey);
+
+        //Turn Chat object into pojo
+        HashMap<String,Object> chatObj = (HashMap<String, Object>) new ObjectMapper()
+                .convertValue(mChat, Map.class);
+
+        chatItemMap.put("/" + pushKey, chatObj);
+
+        chatRef.updateChildren(chatItemMap);
 
     }
 

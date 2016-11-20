@@ -116,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //TODO: add logic to not show plus button if the user has no friends
     public void createNewConversation(View view){
         Intent intent = new Intent(this, ConversationActivity.class);
         startActivity(intent);

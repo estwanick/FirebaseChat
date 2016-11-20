@@ -5,7 +5,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:fitsSystemWindows="true"
-tools:context="cs656.com.firebasemessengerapp.ui.FriendsListActivity">
+tools:context="cs656.com.firebasemessengerapp.ui.ConversationActivity">
 
 <android.support.design.widget.AppBarLayout
     android:layout_width="match_parent"
@@ -37,8 +37,9 @@ tools:context="cs656.com.firebasemessengerapp.ui.FriendsListActivity">
             android:text="Create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button4"
-            android:layout_weight="1" />
+            android:id="@+id/createButton"
+            android:layout_weight="1"
+            android:onClick="createChat" />
     </LinearLayout>
 
 </android.support.design.widget.AppBarLayout>

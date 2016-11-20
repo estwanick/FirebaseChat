@@ -170,6 +170,7 @@
     <orderEntry type="library" exported="" name="bolts-android-1.4.0" level="project" />
     <orderEntry type="library" exported="" name="design-24.2.1" level="project" />
     <orderEntry type="library" exported="" name="firebase-ui-database-0.6.0" level="project" />
+    <orderEntry type="library" exported="" name="jackson-core-2.7.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-auth-9.6.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="exposed-instrumentation-api-publish-0.5" level="project" />
     <orderEntry type="library" exported="" name="support-core-ui-24.2.1" level="project" />
@@ -178,6 +179,7 @@
     <orderEntry type="library" exported="" name="appcompat-v7-24.2.1" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javax.annotation-api-1.2" level="project" />
     <orderEntry type="library" exported="" name="firebase-config-9.6.0" level="project" />
+    <orderEntry type="library" exported="" name="jackson-databind-2.7.2" level="project" />
     <orderEntry type="library" exported="" name="cardview-v7-23.4.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-tasks-9.6.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="javawriter-2.1.1" level="project" />
@@ -192,6 +194,7 @@
     <orderEntry type="library" exported="" name="bolts-tasks-1.4.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-ui-auth-0.6.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-core-9.6.0" level="project" />
+    <orderEntry type="library" exported="" name="jackson-annotations-2.7.0" level="project" />
     <orderEntry type="library" exported="" name="glide-3.7.0" level="project" />
     <orderEntry type="library" exported="" name="firebase-storage-common-9.6.0" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="jsr305-2.0.1" level="project" />

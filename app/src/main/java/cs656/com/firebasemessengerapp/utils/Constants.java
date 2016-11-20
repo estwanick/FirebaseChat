@@ -6,6 +6,6 @@ public final class Constants {
     public static final String FIREBASE_URL = "https://fir-messenger-f2290.firebaseio.com";
     public static final String USERS_LOCATION = "users";
     public static final String FRIENDS_LOCATION = "friends";
-    public static final String CONVERSATION_LOCATION = "conversation";
+    public static final String CHAT_LOCATION = "chats";
 
 }
