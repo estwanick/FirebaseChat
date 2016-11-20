@@ -73,10 +73,12 @@ public class ConversationActivity extends AppCompatActivity {
                         Log.e(TAG, "Clicking row: " + position);
                         Log.e(TAG, "Clicking user: " + friend);
 
-                        mFriendsInChat.setText( mFriendsInChat.getText() + ", " + friend);
                         //Add friend to chat
                         Friend addFriend = new Friend(friend);
-                        mChat.appendFriend(addFriend);
+                        if(mChat.appendFriend(addFriend)){
+                            mFriendsInChat.setText( mFriendsInChat.getText() + ", " + friend);
+                        }
+
                         Log.e(TAG, "Adding to chat: " + friend);
                     }
                 });

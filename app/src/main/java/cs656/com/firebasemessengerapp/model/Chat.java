@@ -37,7 +37,13 @@ public class Chat {
         return friends;
     }
 
-    public void appendFriend(Friend friend){
-        friends.add(friend);
+    public boolean appendFriend(Friend friend){
+        Boolean contFriend = friends.contains(friend);
+        if(!contFriend){
+            friends.add(friend);
+            return true;
+        }
+        return false;
     }
+
 }
