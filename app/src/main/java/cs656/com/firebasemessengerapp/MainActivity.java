@@ -6,9 +6,11 @@ import android.support.annotation.NonNull;
 import android.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import cs656.com.firebasemessengerapp.model.Chat;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.ui.AddConversationDialogFragment;
 import cs656.com.firebasemessengerapp.ui.ChatActivity;
+import cs656.com.firebasemessengerapp.ui.ChatMessagesActivity;
 import cs656.com.firebasemessengerapp.ui.FriendsListActivity;
 import cs656.com.firebasemessengerapp.utils.Constants;
 
@@ -43,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mChatDatabaseReference;
     private ChildEventListener mChildEventListener;
 
-    private ListView mConversationListView;
+    private ListView mChatListView;
     private FirebaseListAdapter mChatAdapter;
     private String mUsername;
     private ValueEventListener mValueEventListener;
@@ -61,12 +64,7 @@ public class MainActivity extends AppCompatActivity {
         mChatDatabaseReference = mFirebaseDatabase.getReference().child(Constants.CHAT_LOCATION);
 
         //Initialize screen variables
-        mConversationListView = (ListView) findViewById(R.id.chatListView);
-
-        //Create & Set firebase UI list adapter
-//        List<Chat> chatList = new ArrayList<>();
-//        mChatAdapter = new ChatAdapter(this, R.layout.chat_item, chatList);
-//        mConversationListView.setAdapter(mChatAdapter);
+        mChatListView = (ListView) findViewById(R.id.chatListView);
 
         mChatAdapter = new FirebaseListAdapter<Chat>(this, Chat.class, R.layout.chat_item, mChatDatabaseReference) {
             @Override
@@ -74,9 +72,30 @@ public class MainActivity extends AppCompatActivity {
                 //Log.e("TAG", "");
                 //final Friend addFriend = new Friend(chat);
                 ((TextView) view.findViewById(R.id.messageTextView)).setText(chat.getChatName());
+                ((TextView) view.findViewById(R.id.nameTextView)).setText(chat.getUid());
+
             }
         };
-        mConversationListView.setAdapter(mChatAdapter);
+        mChatListView.setAdapter(mChatAdapter);
+
+        //Add on click listener to line items
+        mChatListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String messageLocation = mChatAdapter.getRef(position).toString();
+
+                if(messageLocation != null){
+                    Intent intent = new Intent(view.getContext(), ChatMessagesActivity.class);
+                    String messageKey = mChatAdapter.getRef(position).getKey();
+                    intent.putExtra(Constants.MESSAGE_ID, messageKey);
+                    Chat chatItem = (Chat)mChatAdapter.getItem(position);
+                    intent.putExtra(Constants.CHAT_NAME, chatItem.getChatName());
+                    startActivity(intent);
+                }
+
+                //Log.e("TAG", mChatAdapter.getRef(position).toString());
+            }
+        });
 
         mValueEventListener = mChatDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
