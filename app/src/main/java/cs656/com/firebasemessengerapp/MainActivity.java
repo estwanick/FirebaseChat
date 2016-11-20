@@ -135,35 +135,8 @@ public class MainActivity extends AppCompatActivity {
         dialog.show(MainActivity.this.getFragmentManager(), "AddConversationDialogFragment");
     }
 
-    private void attachDatabaseReadListener() {
-//        if (mChildEventListener == null) {
-//            mChildEventListener = new ChildEventListener() {
-//                @Override
-//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    //Sending users for testing
-//                    Chat chat = dataSnapshot.getValue(Chat.class); //Eventually switch to conversation class
-//                    mChatAdapter.add(chat); //Eventually switch to conversation class
-//                }
-//
-//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                }
-//
-//                public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                }
-//
-//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//                }
-//
-//                public void onCancelled(DatabaseError databaseError) {
-//                }
-//            };
-//            mChatDatabaseReference.addChildEventListener(mChildEventListener);
-//        }
-    }
-
     private void onSignedInInitialize(String username) {
         mUsername = username;
-        attachDatabaseReadListener();
     }
 
     private void onSignedOutCleanup() {
