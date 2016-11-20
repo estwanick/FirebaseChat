@@ -127,6 +127,7 @@ public class ChatActivity extends AppCompatActivity {
         //Log.e(TAG, "User logged in is: " + userLoggedIn);
         //final String newFriendEncodedEmail = encodeEmail(newFriendEmail);
         final DatabaseReference chatRef = mFirebaseDatabase.getReference(Constants.CHAT_LOCATION);
+        final DatabaseReference messageRef = mFirebaseDatabase.getReference(Constants.MESSAGE_LOCATION);
         final DatabaseReference pushRef = chatRef.push();
         final String pushKey = pushRef.getKey();
         mChat.setUid(pushKey);
@@ -141,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
         chatRef.updateChildren(chatItemMap);
 
         //Create corresponding message location for this chat
-
+        messageRef.child(pushKey).setValue(pushKey);
     }
 
     //TODO: Used in multiple places, should probably move to its own class
