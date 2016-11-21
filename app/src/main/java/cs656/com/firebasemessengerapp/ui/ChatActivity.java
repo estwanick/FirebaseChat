@@ -75,7 +75,12 @@ public class ChatActivity extends AppCompatActivity {
                         //TODO: Complete the creating of Chat object, then add to firebase
                         //Add friend to chat
                         if(mChat.appendFriend(addFriend)){
-                            mFriendsInChat.setText( mFriendsInChat.getText() + ", " + friend);
+                            String friendsString = "";
+                            for(Friend f: mChat.getFriends()){
+                                friendsString += f.getEmail() + ", ";
+                            }
+                            friendsString = friendsString.substring(0, friendsString.length() - 2);
+                            mFriendsInChat.setText("Users added to chat: " + friendsString);
                         }
 
                         Log.e(TAG, "Adding to chat: " + friend);
@@ -88,6 +93,18 @@ public class ChatActivity extends AppCompatActivity {
                         Log.e(TAG, "Clicking user: " + friend);
                         //TODO: Add remove methods
                         mChat.removeFriend(addFriend); //the name add Friend here is not appropriate
+                        String friendsString = "";
+                        for(Friend f: mChat.getFriends()){
+                            friendsString += f.getEmail() + ", ";
+                        }
+                        if(friendsString.length()>1) {
+                            friendsString = friendsString.substring(0, friendsString.length() - 2);
+
+                            mFriendsInChat.setText("Users added to chat: " + friendsString);
+                        }else{
+                            mFriendsInChat.setText("Users added to chat: ");
+                        }
+
                         Log.e(TAG, "Removing from chat: " + friend);
                     }
                 });
@@ -159,6 +176,21 @@ public class ChatActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.conversationListView);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
+
+        mListView = (ListView) findViewById(R.id.conversationListView);
+        mToolBar = (Toolbar) findViewById(R.id.toolbar);
+        mToolBar.setTitle("Chat app name");
+
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         mFriendsInChat = (TextView) findViewById(R.id.friendsInChat);
         mChatName = (EditText) findViewById(R.id.chat_name);
         mChat = new Chat("","");
