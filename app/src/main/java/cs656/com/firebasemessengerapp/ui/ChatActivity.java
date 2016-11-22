@@ -47,6 +47,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth mFirebaseAuth;
+    private DatabaseReference mFriendsLocationDatabaseReference;
+    private DatabaseReference mCurrentUserDatabaseReference;
     private DatabaseReference mFriendDatabaseReference;
     private TextView mFriendsInChat;
     private EditText mChatName;
@@ -63,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void showFriendsList() {
-        mFriendListAdapter = new FirebaseListAdapter<String>(this, String.class, R.layout.friend_item, mFriendDatabaseReference) {
+        mFriendListAdapter = new FirebaseListAdapter<String>(this, String.class, R.layout.friend_item, mFriendsLocationDatabaseReference) {
             @Override
             protected void populateView(View view, final String friend, final int position) {
                 Log.e("TAG", friend);
@@ -115,7 +117,7 @@ public class ChatActivity extends AppCompatActivity {
         };
         mListView.setAdapter(mFriendListAdapter);
 
-        mValueEventListener = mFriendDatabaseReference.addValueEventListener(new ValueEventListener() {
+        mValueEventListener = mFriendsLocationDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
@@ -166,6 +168,24 @@ public class ChatActivity extends AppCompatActivity {
         List<Message> initialMessages = new ArrayList<>();
         initialMessages.add(new Message(mFirebaseAuth.getCurrentUser().getEmail(), initialMessage));
         messageRef.child(pushKey).setValue(initialMessages);
+
+        //Must add chat reference under every user object. Chat/User/Chats[chat1, chat2 ..]
+        //Add to current users chat object
+        chatItemMap = new HashMap<String, Object>();
+        chatItemMap.put("/chats/" + pushKey, chatObj); //repushes chat obj -- Not space efficient
+        mCurrentUserDatabaseReference.updateChildren(chatItemMap); //Adds Chatkey to users chats
+
+        //Push chat to all friends
+        for(Friend f: mChat.getFriends()){
+            mFriendDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION
+                    + "/" + encodeEmail(f.getEmail()));
+            chatItemMap = new HashMap<String, Object>();
+            chatItemMap.put("/chats/" + pushKey, chatObj);
+            mFriendDatabaseReference.updateChildren(chatItemMap);
+            mFriendDatabaseReference = null;
+        }
+
+        //TODO: After creating chat, direct user to the corresponding chat activity
     }
 
     //TODO: Used in multiple places, should probably move to its own class
@@ -176,8 +196,10 @@ public class ChatActivity extends AppCompatActivity {
     private void initializeScreen() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mCurrentUserDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION
+                + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
         //Eventually this list will filter out users that are already your friend
-        mFriendDatabaseReference = mFirebaseDatabase.getReference().child(Constants.FRIENDS_LOCATION
+        mFriendsLocationDatabaseReference = mFirebaseDatabase.getReference().child(Constants.FRIENDS_LOCATION
             + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
 
         mListView = (ListView) findViewById(R.id.conversationListView);
