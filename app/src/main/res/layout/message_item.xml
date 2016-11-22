@@ -14,5 +14,11 @@
         android:layout_weight="0"
         android:textAppearance="?android:attr/textAppearanceLarge"
         tools:text="Message" />
+    <TextView
+        android:id="@+id/senderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        tools:text="Sender" />
 
 </LinearLayout>
