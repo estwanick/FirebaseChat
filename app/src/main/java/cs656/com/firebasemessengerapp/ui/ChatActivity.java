@@ -19,12 +19,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Chat;
 import cs656.com.firebasemessengerapp.model.Friend;
+import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
 
@@ -159,7 +162,10 @@ public class ChatActivity extends AppCompatActivity {
         chatRef.updateChildren(chatItemMap);
 
         //Create corresponding message location for this chat
-        messageRef.child(pushKey).setValue(pushKey);
+        String initialMessage = mFriendsInChat.getText().toString();
+        List<Message> initialMessages = new ArrayList<>();
+        initialMessages.add(new Message(mFirebaseAuth.getCurrentUser().getEmail(), initialMessage));
+        messageRef.child(pushKey).setValue(initialMessages);
     }
 
     //TODO: Used in multiple places, should probably move to its own class
