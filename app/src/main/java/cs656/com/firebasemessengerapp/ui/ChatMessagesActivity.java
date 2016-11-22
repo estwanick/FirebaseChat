@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -20,6 +21,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -89,7 +92,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         final String pushKey = pushRef.getKey();
 
         String messageString = mMessageField.getText().toString();
-        Message message = new Message(mFirebaseAuth.getCurrentUser().getEmail(), messageString);
+        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString);
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
         HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
@@ -108,8 +111,20 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mMessageListAdapter = new FirebaseListAdapter<Message>(this, Message.class, R.layout.message_item, mMessageDatabaseReference) {
             @Override
             protected void populateView(View view, Message message, final int position) {
-                ((TextView) view.findViewById(R.id.messageTextView)).setText(message.getMessage());
-                ((TextView) view.findViewById(R.id.senderTextView)).setText(message.getSender());
+                TextView messgaeText = (TextView) view.findViewById(R.id.messageTextView);
+                TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
+                messgaeText.setText(message.getMessage());
+                senderText.setText(message.getSender());
+                //If you sent this message, right align
+                String mSender = message.getSender();
+                String currentUserEmail = encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()); //make global to class
+                if(mSender.equals(currentUserEmail)){
+                    messgaeText.setGravity(Gravity.RIGHT);
+                    senderText.setGravity(Gravity.RIGHT);
+                }else{
+                    messgaeText.setGravity(Gravity.LEFT);
+                    senderText.setGravity(Gravity.LEFT);
+                }
             }
         };
         mMessageList.setAdapter(mMessageListAdapter);
@@ -125,6 +140,11 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mMessageDatabaseReference = mFirebaseDatabase.getReference().child(Constants.MESSAGE_LOCATION
                 + "/" + messageId);
+    }
+
+    //TODO: Used in multiple places, should probably move to its own class
+    public static String encodeEmail(String userEmail) {
+        return userEmail.replace(".", ",");
     }
 
 }
