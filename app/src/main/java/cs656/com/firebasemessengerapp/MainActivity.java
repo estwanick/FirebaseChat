@@ -61,7 +61,53 @@ public class MainActivity extends AppCompatActivity {
         //Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mChatDatabaseReference = mFirebaseDatabase.getReference().child(Constants.CHAT_LOCATION);
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    onSignedInInitialize(user);
+                    createUser(user);
+                } else {
+                    // User is signed out
+                    //onSignedOutCleanup();
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setProviders(
+                                            AuthUI.EMAIL_PROVIDER,
+                                            AuthUI.GOOGLE_PROVIDER)
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+        };
+
+
+    }
+
+    //TODO: add logic to not show plus button if the user has no friends
+    public void createNewChat(View view){
+        Intent intent = new Intent(this, ChatActivity.class);
+        startActivity(intent);
+    }
+
+    //Not being used
+    public void showAddConversationActicity(View view) {
+        /* Create an instance of the dialog fragment and show it */
+        DialogFragment dialog = AddConversationDialogFragment.newInstance();
+        dialog.show(MainActivity.this.getFragmentManager(), "AddConversationDialogFragment");
+    }
+
+    private void onSignedInInitialize(FirebaseUser user) {
+        mUsername = user.getDisplayName();
+        mChatDatabaseReference = mFirebaseDatabase.getReference()
+                .child(Constants.USERS_LOCATION
+                        + "/" + encodeEmail(user.getEmail()) + "/"
+                        + Constants.CHAT_LOCATION );
 
         //Initialize screen variables
         mChatListView = (ListView) findViewById(R.id.chatListView);
@@ -77,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mChatListView.setAdapter(mChatAdapter);
-
         //Add on click listener to line items
         mChatListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -113,59 +158,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    onSignedInInitialize(user.getDisplayName());
-                    createUser(user);
-                } else {
-                    // User is signed out
-                    //onSignedOutCleanup();
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setIsSmartLockEnabled(false)
-                                    .setProviders(
-                                            AuthUI.EMAIL_PROVIDER,
-                                            AuthUI.GOOGLE_PROVIDER)
-                                    .build(),
-                            RC_SIGN_IN);
-                }
-            }
-        };
-
-
-    }
-
-    //TODO: add logic to not show plus button if the user has no friends
-    public void createNewChat(View view){
-        Intent intent = new Intent(this, ChatActivity.class);
-        startActivity(intent);
-    }
-
-    //Not being used
-    public void showAddConversationActicity(View view) {
-        /* Create an instance of the dialog fragment and show it */
-        DialogFragment dialog = AddConversationDialogFragment.newInstance();
-        dialog.show(MainActivity.this.getFragmentManager(), "AddConversationDialogFragment");
-    }
-
-    private void onSignedInInitialize(String username) {
-        mUsername = username;
-    }
-
-    private void onSignedOutCleanup() {
-        mUsername = ANONYMOUS;
-        detachDatabaseReadListener();
-    }
-
-
-    private void detachDatabaseReadListener() {
-
     }
 
     @Override
@@ -180,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
         if (mAuthStateListener != null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
         }
-        detachDatabaseReadListener();
     }
 
     @Override

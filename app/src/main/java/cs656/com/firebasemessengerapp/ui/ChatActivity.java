@@ -65,6 +65,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void showFriendsList() {
+        //TODO: This list should not show your own userid..
         mFriendListAdapter = new FirebaseListAdapter<String>(this, String.class, R.layout.friend_item, mFriendsLocationDatabaseReference) {
             @Override
             protected void populateView(View view, final String friend, final int position) {
@@ -171,6 +172,8 @@ public class ChatActivity extends AppCompatActivity {
 
         //Must add chat reference under every user object. Chat/User/Chats[chat1, chat2 ..]
         //Add to current users chat object
+        //TODO: OPTIMIZATION!! decide how we will solve data replication issue, we could just send chat id
+        // but this would require more complex queries on other pages
         chatItemMap = new HashMap<String, Object>();
         chatItemMap.put("/chats/" + pushKey, chatObj); //repushes chat obj -- Not space efficient
         mCurrentUserDatabaseReference.updateChildren(chatItemMap); //Adds Chatkey to users chats
