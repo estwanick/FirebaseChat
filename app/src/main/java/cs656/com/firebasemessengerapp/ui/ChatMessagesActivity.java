@@ -1,8 +1,11 @@
 package cs656.com.firebasemessengerapp.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -121,9 +124,13 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 if(mSender.equals(currentUserEmail)){
                     messgaeText.setGravity(Gravity.RIGHT);
                     senderText.setGravity(Gravity.RIGHT);
+                    //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
+                     //       R.color.colorAccent, null));
                 }else{
                     messgaeText.setGravity(Gravity.LEFT);
                     senderText.setGravity(Gravity.LEFT);
+                    //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
+                     //       R.color.colorPrimary, null));
                 }
             }
         };
