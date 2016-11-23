@@ -1,6 +1,7 @@
 package cs656.com.firebasemessengerapp.model;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class User {
 

@@ -122,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+
+
+
         mChatListView.setAdapter(mChatAdapter);
         //Add on click listener to line items
         mChatListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -145,9 +148,10 @@ public class MainActivity extends AppCompatActivity {
         mValueEventListener = mChatDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                if (user == null) {
-                    finish();
+                Chat chat = dataSnapshot.getValue(Chat.class);
+                //Check if any chats exists
+                if (chat == null) {
+                    //finish();
                     return;
                 }
                 mChatAdapter.notifyDataSetChanged();
