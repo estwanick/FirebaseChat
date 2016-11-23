@@ -1,5 +1,6 @@
 package cs656.com.firebasemessengerapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -189,6 +190,11 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         //TODO: After creating chat, direct user to the corresponding chat activity
+        Intent intent = new Intent(view.getContext(), ChatMessagesActivity.class);
+        String messageKey = pushKey;
+        intent.putExtra(Constants.MESSAGE_ID, messageKey);
+        intent.putExtra(Constants.CHAT_NAME, mChat.getChatName());
+        startActivity(intent);
     }
 
     //TODO: Used in multiple places, should probably move to its own class
