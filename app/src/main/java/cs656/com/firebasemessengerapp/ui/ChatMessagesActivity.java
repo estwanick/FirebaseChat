@@ -95,7 +95,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         final String pushKey = pushRef.getKey();
 
         String messageString = mMessageField.getText().toString();
-        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString);
+        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, false, "text");
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
         HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
