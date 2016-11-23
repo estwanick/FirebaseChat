@@ -18,7 +18,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cs656.com.firebasemessengerapp.R;
+import cs656.com.firebasemessengerapp.model.Friend;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
 
@@ -36,7 +40,8 @@ public class FriendsListActivity extends AppCompatActivity {
     private DatabaseReference mUserDatabaseReference;
     private DatabaseReference mCurrentUsersFriends;
     private FirebaseAuth mFirebaseAuth;
-    private ChildEventListener mChildEventListener;
+
+    private final List<String> mUsersFriends = new ArrayList<>();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -56,6 +61,7 @@ public class FriendsListActivity extends AppCompatActivity {
                 //Log.e("TAG", user.toString());
                 final String username = user.getUsername();
                 final String email = user.getEmail();
+
                 ((TextView)view.findViewById(R.id.messageTextView)).setText(username);
                 ((Button)view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -127,6 +133,8 @@ public class FriendsListActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         //Eventually this list will filter out users that are already your friend
         mUserDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION);
+        mCurrentUsersFriends = mFirebaseDatabase.getReference().child(Constants.FRIENDS_LOCATION
+            + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
 
         mListView = (ListView) findViewById(R.id.friendsListView);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
