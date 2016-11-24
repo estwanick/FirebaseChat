@@ -16,6 +16,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -61,6 +62,12 @@ public class FriendsListActivity extends AppCompatActivity {
                 //Log.e("TAG", user.toString());
                 final String username = user.getUsername();
                 final String email = user.getEmail();
+                //Check if this user is already your friend
+                Query isFriend = mCurrentUsersFriends.equalTo(email);
+
+                if(isFriend.toString() == null){
+                    Log.e(TAG, "This user is not your friend yet");
+                }
 
                 ((TextView)view.findViewById(R.id.messageTextView)).setText(username);
                 ((Button)view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {

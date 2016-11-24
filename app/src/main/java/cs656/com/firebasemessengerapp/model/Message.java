@@ -20,6 +20,7 @@ public class Message {
         this.message = message;
         this.isMultimedia = isMultimedia;
         this.contentType = contentType;
+        //Add image/voice location reference
     }
 
     public String getSender() {
