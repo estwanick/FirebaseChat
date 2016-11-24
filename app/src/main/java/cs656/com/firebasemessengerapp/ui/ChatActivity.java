@@ -167,9 +167,13 @@ public class ChatActivity extends AppCompatActivity {
 
         //Create corresponding message location for this chat
         String initialMessage = mFriendsInChat.getText().toString();
-        List<Message> initialMessages = new ArrayList<>();
-        initialMessages.add(new Message(mFirebaseAuth.getCurrentUser().getEmail(), initialMessage));
-        messageRef.child(pushKey).setValue(initialMessages);
+        Message initialMessages =
+                new Message(mFirebaseAuth.getCurrentUser().getEmail(), initialMessage);
+        final DatabaseReference initMsgRef =
+                mFirebaseDatabase.getReference(Constants.MESSAGE_LOCATION + "/" + pushKey);
+        final DatabaseReference msgPush = initMsgRef.push();
+        final String msgPushKey = msgPush.getKey();
+        initMsgRef.child(msgPushKey).setValue(initialMessages);
 
         //Must add chat reference under every user object. Chat/User/Chats[chat1, chat2 ..]
         //Add to current users chat object
@@ -189,7 +193,6 @@ public class ChatActivity extends AppCompatActivity {
             mFriendDatabaseReference = null;
         }
 
-        //TODO: After creating chat, direct user to the corresponding chat activity
         Intent intent = new Intent(view.getContext(), ChatMessagesActivity.class);
         String messageKey = pushKey;
         intent.putExtra(Constants.MESSAGE_ID, messageKey);
