@@ -90,9 +90,28 @@ public class ChatMessagesActivity extends AppCompatActivity {
     }
 
     //If image or voice message add them to Firebase.Storage
-    public void sendVoice(){};
+    public void sendVoice(){
+        final DatabaseReference pushRef = mMessageDatabaseReference.push();
+        final String pushKey = pushRef.getKey();
+        //Use the pushkey as a reference from the corresponding chat/message
+
+        //Step 1: submit to firebase storage
+
+        //Step 2: add to firebase database under messages
+        //Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, false, "text");
+
+    };
     //Send image messages from here
-    public void sendImage(){};
+    public void sendImage(){
+        final DatabaseReference pushRef = mMessageDatabaseReference.push();
+        final String pushKey = pushRef.getKey();
+        //Use the pushkey as a reference from the corresponding chat/message
+
+        //Step 1: submit to firebase storage
+
+        //Step 2: add to firebase database under messages
+        //Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, false, "text");
+    };
 
     public void sendMessage(View view){
         //final DatabaseReference messageRef = mFirebaseDatabase.getReference(Constants.MESSAGE_LOCATION);
