@@ -24,10 +24,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Chat;
+import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
 
@@ -107,8 +109,36 @@ public class ChatListActivity extends AppCompatActivity {
                 //Log.e("TAG", "");
                 //final Friend addFriend = new Friend(chat);
                 ((TextView) view.findViewById(R.id.messageTextView)).setText(chat.getChatName());
+
+                //Fetch last message from chat
+                final DatabaseReference messageRef =
+                        mFirebaseDatabase.getReference(Constants.MESSAGE_LOCATION
+                                + "/" + chat.getUid());
+
+                final TextView latestMessage = (TextView)view.findViewById(R.id.nameTextView);
+
+                messageRef.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                        Message newMsg = dataSnapshot.getValue(Message.class);
+                        latestMessage.setText(newMsg.getSender() + ": " +newMsg.getMessage());
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {}
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {}
+                });
+
                 //Replace this with the most recent message from the chat
-                ((TextView) view.findViewById(R.id.nameTextView)).setText(chat.getUid());
+
             }
         };
 
@@ -212,8 +242,7 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     private void createUser(FirebaseUser user) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference usersRef = database.getReference("users");
+        final DatabaseReference usersRef = mFirebaseDatabase.getReference(Constants.USERS_LOCATION);
         final String encodedEmail = encodeEmail(user.getEmail());
         final DatabaseReference userRef = usersRef.child(encodedEmail);
         final String username = user.getDisplayName();
