@@ -58,7 +58,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         chatName = intent.getStringExtra(Constants.CHAT_NAME);
 
         if(messageId == null){
-            finish();
+            finish(); // replace this.. nav user back to home
             return;
         }
 

@@ -107,8 +107,8 @@ public class ChatListActivity extends AppCompatActivity {
                 //Log.e("TAG", "");
                 //final Friend addFriend = new Friend(chat);
                 ((TextView) view.findViewById(R.id.messageTextView)).setText(chat.getChatName());
+                //Replace this with the most recent message from the chat
                 ((TextView) view.findViewById(R.id.nameTextView)).setText(chat.getUid());
-
             }
         };
 
