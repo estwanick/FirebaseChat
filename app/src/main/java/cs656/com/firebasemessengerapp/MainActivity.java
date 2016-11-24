@@ -32,6 +32,7 @@ import cs656.com.firebasemessengerapp.ui.AddConversationDialogFragment;
 import cs656.com.firebasemessengerapp.ui.ChatActivity;
 import cs656.com.firebasemessengerapp.ui.ChatMessagesActivity;
 import cs656.com.firebasemessengerapp.ui.FriendsListActivity;
+import cs656.com.firebasemessengerapp.ui.ProfileActivity;
 import cs656.com.firebasemessengerapp.utils.Constants;
 
 public class MainActivity extends AppCompatActivity {
@@ -209,15 +210,17 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.listFriends) {
             //Open up activity where a user can add and view friends
-            ViewFriendsList();
+            Intent intent = new Intent(this, FriendsListActivity.class);
+            startActivity(intent);
+        }
+
+        if (id == R.id.profilePage) {
+            //Open up activity where a user can add and view friends
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
         }
 
         return true;
-    }
-
-    private void ViewFriendsList(){
-        Intent intent = new Intent(this, FriendsListActivity.class);
-        startActivity(intent);
     }
 
     private void createUser(FirebaseUser user) {
