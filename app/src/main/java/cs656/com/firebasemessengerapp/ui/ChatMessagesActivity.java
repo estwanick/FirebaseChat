@@ -68,13 +68,21 @@ public class ChatMessagesActivity extends AppCompatActivity {
         addListeners();
     }
 
+    //Add listener for on completion of image selection
+    public void openImageSelector(){
+        //implement image selection
+
+        //on complete: sendImage()
+    };
+
+    //Add listener for on completion of voice message
+    public void openVoiceRecorder(){
+        //Implement voice selection
+
+        //on complete: sendVoice()
+    };
+
     public void addListeners(){
-
-        //Add listener for on completion of image selection
-
-        //Add listener for on completion of voice message
-
-
         mMessageField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -96,7 +104,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
     }
 
     //If image or voice message add them to Firebase.Storage
-    public void sendVoice(View view){
+    public void sendVoice(){
         final DatabaseReference pushRef = mMessageDatabaseReference.push();
         final String pushKey = pushRef.getKey();
         //Use the pushkey as a reference from the corresponding chat/message
@@ -109,7 +117,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
     };
     //Send image messages from here
-    public void sendImage(View view){
+    public void sendImage(){
         final DatabaseReference pushRef = mMessageDatabaseReference.push();
         final String pushKey = pushRef.getKey();
         //Use the pushkey as a reference from the corresponding chat/message

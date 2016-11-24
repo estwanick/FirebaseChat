@@ -53,15 +53,17 @@ tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity">
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/photoPickerButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@android:drawable/ic_menu_call" />
-
-            <ImageButton
                 android:id="@+id/recordVoiceButton"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
+                android:onClick="openVoiceRecorder"
+                android:background="@android:drawable/ic_menu_call" />
+
+            <ImageButton
+                android:id="@+id/photoPickerButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:onClick="openImageSelector"
                 android:background="@android:drawable/ic_menu_gallery" />
 
             <EditText
