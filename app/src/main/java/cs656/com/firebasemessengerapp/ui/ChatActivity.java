@@ -215,7 +215,7 @@ public class ChatActivity extends AppCompatActivity {
             + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
 
         mListView = (ListView) findViewById(R.id.conversationListView);
-        mToolBar = (Toolbar) findViewById(R.id.toolbar);
+        //mToolBar = (Toolbar) findViewById(R.id.toolbar);
 
         mListView = (ListView) findViewById(R.id.conversationListView);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
