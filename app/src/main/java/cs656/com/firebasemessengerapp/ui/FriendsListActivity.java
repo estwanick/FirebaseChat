@@ -145,5 +145,15 @@ public class FriendsListActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.friendsListView);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
