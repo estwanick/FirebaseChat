@@ -189,6 +189,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mMessageDatabaseReference = mFirebaseDatabase.getReference().child(Constants.MESSAGE_LOCATION
                 + "/" + messageId);
 
+        mToolBar.setTitle(chatName);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

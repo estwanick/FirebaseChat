@@ -219,7 +219,7 @@ public class ChatActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.conversationListView);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
-        mToolBar.setTitle("Chat app name");
+        mToolBar.setTitle("Create new chat");
 
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
