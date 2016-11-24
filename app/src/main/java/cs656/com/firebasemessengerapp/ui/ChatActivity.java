@@ -73,7 +73,7 @@ public class ChatActivity extends AppCompatActivity {
                 Log.e("TAG", friend);
                 final Friend addFriend = new Friend(friend);
                 ((TextView) view.findViewById(R.id.messageTextView)).setText(friend);
-                ((Button) view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
+                (view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.e(TAG, "Clicking row: " + position);
@@ -93,7 +93,7 @@ public class ChatActivity extends AppCompatActivity {
                         Log.e(TAG, "Adding to chat: " + friend);
                     }
                 });
-                ((Button) view.findViewById(R.id.removeFriend)).setOnClickListener(new View.OnClickListener() {
+                (view.findViewById(R.id.removeFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.e(TAG, "Clicking row: " + position);

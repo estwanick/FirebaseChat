@@ -70,7 +70,7 @@ public class FriendsListActivity extends AppCompatActivity {
                 }
 
                 ((TextView)view.findViewById(R.id.messageTextView)).setText(username);
-                ((Button)view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
+                (view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.e(TAG, "Clicking row: " + position);
@@ -79,7 +79,7 @@ public class FriendsListActivity extends AppCompatActivity {
                         addNewFriend(email); //change to send email
                     }
                 });
-                ((Button)view.findViewById(R.id.removeFriend)).setOnClickListener(new View.OnClickListener() {
+                (view.findViewById(R.id.removeFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.e(TAG, "Clicking row: " + position);
