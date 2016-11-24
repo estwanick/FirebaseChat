@@ -91,6 +91,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
     //If image or voice message add them to Firebase.Storage
     public void sendVoice(){};
+    //Send image messages from here
     public void sendImage(){};
 
     public void sendMessage(View view){
