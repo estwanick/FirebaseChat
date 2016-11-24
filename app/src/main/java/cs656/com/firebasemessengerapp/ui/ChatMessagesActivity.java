@@ -136,7 +136,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
         String messageString = mMessageField.getText().toString();
         //Create message object with text/voice etc
-        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, false, "text");
+        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString);
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
         HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()

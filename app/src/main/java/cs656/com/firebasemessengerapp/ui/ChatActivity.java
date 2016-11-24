@@ -168,7 +168,7 @@ public class ChatActivity extends AppCompatActivity {
         //Create corresponding message location for this chat
         String initialMessage = mFriendsInChat.getText().toString();
         List<Message> initialMessages = new ArrayList<>();
-        initialMessages.add(new Message(mFirebaseAuth.getCurrentUser().getEmail(), initialMessage, false, "text"));
+        initialMessages.add(new Message(mFirebaseAuth.getCurrentUser().getEmail(), initialMessage));
         messageRef.child(pushKey).setValue(initialMessages);
 
         //Must add chat reference under every user object. Chat/User/Chats[chat1, chat2 ..]
