@@ -84,6 +84,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
 
         Intent intent = this.getIntent();
+        //MessageID is the location of the messages for this specific chat
         messageId = intent.getStringExtra(Constants.MESSAGE_ID);
         chatName = intent.getStringExtra(Constants.CHAT_NAME);
 
@@ -138,13 +139,16 @@ public class ChatMessagesActivity extends AppCompatActivity {
             mProgress.show();
 
             Uri uri = data.getData();
+            //Keep all images for a specific chat grouped together
             StorageReference filepath = mStorage.child("Photos" + "/" + messageId).child(uri.getLastPathSegment());
-
+            final String imageLocation = filepath.toString();
             filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                     mProgress.dismiss();
+                    //create a new message containing this image
+                    addImageToMessages(imageLocation);
 
                 }
             });
@@ -271,17 +275,27 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
 
     //Send image messages from here
-    public void sendImage(){
+    public void addImageToMessages(String imageLocation){
         final DatabaseReference pushRef = mMessageDatabaseReference.push();
         final String pushKey = pushRef.getKey();
-        //Use the pushkey as a reference from the corresponding chat/message
 
-        //Step 1: submit to firebase storage
-
-        String voiceUrlLocation = ""; //add the firebase storage url for voice messages
-        //Step 2: add to firebase database under messages
-        //Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, false, "text");
-    };
+        //Create message object with text/voice etc
+        Message message =
+                new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()),
+                        "Message: Image Sent", "IMAGE", imageLocation);
+        //Create HashMap for Pushing
+        HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
+        HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
+                .convertValue(message, Map.class);
+        messageItemMap.put("/" + pushKey, messageObj);
+        mMessageDatabaseReference.updateChildren(messageItemMap)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mMessageField.setText("");
+                    }
+                });
+    }
 
 
 
