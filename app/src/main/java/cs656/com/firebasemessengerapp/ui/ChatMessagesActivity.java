@@ -1,8 +1,12 @@
 package cs656.com.firebasemessengerapp.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -12,21 +16,29 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,10 +61,28 @@ public class ChatMessagesActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private Message mMessage;
 
+    private ImageButton mphotoPickerButton;
+    private static final int GALLERY_INTENT=2;
+    private StorageReference mStorage;
+    private ProgressDialog mProgress;
+
+    private ImageButton mrecordVoiceButton;
+    private TextView mRecordLable;
+
+    private MediaRecorder mRecorder;
+    private String mFileName = null;
+
+    private static final String LOG_TAG = "Record_log";
+
+
+
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.messages_activity);
+
+
         Intent intent = this.getIntent();
         messageId = intent.getStringExtra(Constants.MESSAGE_ID);
         chatName = intent.getStringExtra(Constants.CHAT_NAME);
@@ -62,25 +92,146 @@ public class ChatMessagesActivity extends AppCompatActivity {
             return;
         }
 
+
+
         initializeScreen();
         mToolBar.setTitle(chatName);
         showMessages();
         addListeners();
+        openImageSelector();
+
+     //   openVoiceRecorder();
+
+
+
     }
 
     //Add listener for on completion of image selection
     public void openImageSelector(){
         //implement image selection
+        mphotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
+
+        mProgress = new ProgressDialog(this);
+
+        mphotoPickerButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(Intent.ACTION_PICK);
+                intent.setType("image/*");
+                startActivityForResult(intent, GALLERY_INTENT);
+            }
+        });
 
         //on complete: sendImage()
-    };
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data){
+
+        mStorage = FirebaseStorage.getInstance().getReference();
+        super.onActivityResult(requestCode, requestCode, data);
+
+        if(requestCode ==GALLERY_INTENT && resultCode == RESULT_OK){
+
+            mProgress.setMessage("Uploading...");
+            mProgress.show();
+
+            Uri uri = data.getData();
+            StorageReference filepath = mStorage.child("Photos").child(uri.getLastPathSegment());
+
+            filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    mProgress.dismiss();
+
+                }
+            });
+        }
+
+    }
 
     //Add listener for on completion of voice message
     public void openVoiceRecorder(){
         //Implement voice selection
+        mrecordVoiceButton =(ImageButton) findViewById(R.id.photoPickerButton);
+
+        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mFileName += "/recorded_audio.3gp";
+
+        mrecordVoiceButton.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent){
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
+
+                    startRecording();
+
+                    mRecordLable.setText("Recording started...");
+                }
+                else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
+
+                    stopRecording();
+
+                    mRecordLable.setText("Recording stopped...");
+                }
+                return false;
+            }
+        });
 
         //on complete: sendVoice()
-    };
+    }
+
+    private void startRecording() {
+
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        mRecorder.setOutputFile(mFileName);
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+
+        mRecorder.start();
+    }
+
+    private void stopRecording() {
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+
+        uploadAudio();
+
+        //   sendAudio();
+    }
+
+    private void uploadAudio() {
+
+        mStorage = FirebaseStorage.getInstance().getReference();
+
+        mProgress.setMessage("Uploading Audio...");
+        mProgress.show();
+
+        StorageReference filepath = mStorage.child("Audio").child("new_audio.3gp");
+
+        Uri uri = Uri.fromFile(new File(mFileName));
+
+        filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                mProgress.dismiss();
+
+                mRecordLable.setText("Uploading Finished...");
+
+            }
+        });
+    }
 
     public void addListeners(){
         mMessageField.addTextChangedListener(new TextWatcher() {
@@ -116,6 +267,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
         //Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, false, "text");
 
     };
+
+
     //Send image messages from here
     public void sendImage(){
         final DatabaseReference pushRef = mMessageDatabaseReference.push();
@@ -128,6 +281,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
         //Step 2: add to firebase database under messages
         //Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, false, "text");
     };
+
+
 
     public void sendMessage(View view){
         //final DatabaseReference messageRef = mFirebaseDatabase.getReference(Constants.MESSAGE_LOCATION);
@@ -166,12 +321,12 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     messgaeText.setGravity(Gravity.RIGHT);
                     senderText.setGravity(Gravity.RIGHT);
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
-                     //       R.color.colorAccent, null));
+                    //       R.color.colorAccent, null));
                 }else{
                     messgaeText.setGravity(Gravity.LEFT);
                     senderText.setGravity(Gravity.LEFT);
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
-                     //       R.color.colorPrimary, null));
+                    //       R.color.colorPrimary, null));
                 }
             }
         };
@@ -189,6 +344,10 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mMessageDatabaseReference = mFirebaseDatabase.getReference().child(Constants.MESSAGE_LOCATION
                 + "/" + messageId);
     }
+
+
+
+
 
     //TODO: Used in multiple places, should probably move to its own class
     public static String encodeEmail(String userEmail) {
