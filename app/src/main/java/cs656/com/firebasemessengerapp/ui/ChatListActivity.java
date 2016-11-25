@@ -121,7 +121,7 @@ public class ChatListActivity extends AppCompatActivity {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                         Message newMsg = dataSnapshot.getValue(Message.class);
-                        latestMessage.setText(newMsg.getSender() + ": " +newMsg.getMessage());
+                        latestMessage.setText(newMsg.getSender() + ": " + newMsg.getMessage());
                     }
 
                     @Override

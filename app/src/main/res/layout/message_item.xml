@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/messageLine"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,11 +9,19 @@
     android:layout_marginStart="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/imageMessage"
+        android:layout_width="140dp"
+        android:layout_height="137dp"
+        android:adjustViewBounds="true"
+        android:background="@color/cardview_dark_background"
+        android:visibility="gone"
+        android:scaleType="fitCenter" />
+
     <TextView
         android:id="@+id/messageTextView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
         android:textAppearance="?android:attr/textAppearanceLarge"
         tools:text="Message" />
     <TextView
