@@ -138,7 +138,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
             mProgress.show();
 
             Uri uri = data.getData();
-            StorageReference filepath = mStorage.child("Photos").child(uri.getLastPathSegment());
+            StorageReference filepath = mStorage.child("Photos" + "/" + messageId).child(uri.getLastPathSegment());
 
             filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
