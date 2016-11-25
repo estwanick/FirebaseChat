@@ -10,17 +10,26 @@ public class Message {
     private String message;
     private Boolean isMultimedia;
     private String contentType;
+    private String contentLocation;
 
     public Message(){
 
     }
 
-    public Message(String sender, String message, Boolean isMultimedia, String contentType){
+    //Constructor for plain text message
+    public Message(String sender, String message){
         this.sender = sender;
         this.message = message;
-        this.isMultimedia = isMultimedia;
+        this.isMultimedia = false;
+    }
+
+    //Constructor for Multimedia message
+    public Message(String sender, String message, String contentType, String contentLocation){
+        this.sender = sender;
+        this.message = message;
+        this.isMultimedia = true;
         this.contentType = contentType;
-        //Add image/voice location reference
+        this.contentLocation = contentLocation;
     }
 
     public String getSender() {
@@ -29,6 +38,10 @@ public class Message {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getContentLocation() {
+        return contentLocation;
     }
 
     public Boolean getMultimedia() {

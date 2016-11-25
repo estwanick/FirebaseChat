@@ -88,7 +88,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         chatName = intent.getStringExtra(Constants.CHAT_NAME);
 
         if(messageId == null){
-            finish();
+            finish(); // replace this.. nav user back to home
             return;
         }
 
@@ -292,7 +292,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
         String messageString = mMessageField.getText().toString();
         //Create message object with text/voice etc
-        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, false, "text");
+        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString);
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
         HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
@@ -344,6 +344,17 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mMessageDatabaseReference = mFirebaseDatabase.getReference().child(Constants.MESSAGE_LOCATION
                 + "/" + messageId);
+
+        mToolBar.setTitle(chatName);
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
 

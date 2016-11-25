@@ -73,7 +73,7 @@ public class ChatActivity extends AppCompatActivity {
                 Log.e("TAG", friend);
                 final Friend addFriend = new Friend(friend);
                 ((TextView) view.findViewById(R.id.messageTextView)).setText(friend);
-                ((Button) view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
+                (view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.e(TAG, "Clicking row: " + position);
@@ -93,7 +93,7 @@ public class ChatActivity extends AppCompatActivity {
                         Log.e(TAG, "Adding to chat: " + friend);
                     }
                 });
-                ((Button) view.findViewById(R.id.removeFriend)).setOnClickListener(new View.OnClickListener() {
+                (view.findViewById(R.id.removeFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Log.e(TAG, "Clicking row: " + position);
@@ -167,9 +167,13 @@ public class ChatActivity extends AppCompatActivity {
 
         //Create corresponding message location for this chat
         String initialMessage = mFriendsInChat.getText().toString();
-        List<Message> initialMessages = new ArrayList<>();
-        initialMessages.add(new Message(mFirebaseAuth.getCurrentUser().getEmail(), initialMessage, false, "text"));
-        messageRef.child(pushKey).setValue(initialMessages);
+        Message initialMessages =
+                new Message("System", initialMessage);
+        final DatabaseReference initMsgRef =
+                mFirebaseDatabase.getReference(Constants.MESSAGE_LOCATION + "/" + pushKey);
+        final DatabaseReference msgPush = initMsgRef.push();
+        final String msgPushKey = msgPush.getKey();
+        initMsgRef.child(msgPushKey).setValue(initialMessages);
 
         //Must add chat reference under every user object. Chat/User/Chats[chat1, chat2 ..]
         //Add to current users chat object
@@ -189,7 +193,6 @@ public class ChatActivity extends AppCompatActivity {
             mFriendDatabaseReference = null;
         }
 
-        //TODO: After creating chat, direct user to the corresponding chat activity
         Intent intent = new Intent(view.getContext(), ChatMessagesActivity.class);
         String messageKey = pushKey;
         intent.putExtra(Constants.MESSAGE_ID, messageKey);
@@ -212,11 +215,11 @@ public class ChatActivity extends AppCompatActivity {
             + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
 
         mListView = (ListView) findViewById(R.id.conversationListView);
-        mToolBar = (Toolbar) findViewById(R.id.toolbar);
+        //mToolBar = (Toolbar) findViewById(R.id.toolbar);
 
         mListView = (ListView) findViewById(R.id.conversationListView);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
-        mToolBar.setTitle("Chat app name");
+        mToolBar.setTitle("Create new chat");
 
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

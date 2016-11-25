@@ -37,7 +37,17 @@
         </activity>
         <activity
             android:name=".ui.ChatMessagesActivity"
-            android:label="Start Conversation"
+            android:label="(Name of Chat)"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".ui.ProfileActivity"
+            android:label="User Profile"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".ui.ChatListActivity"
+            android:label="Chats"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <meta-data
