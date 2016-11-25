@@ -24,6 +24,7 @@ import java.util.List;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Friend;
+import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
 
@@ -43,6 +44,7 @@ public class FriendsListActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
 
     private final List<String> mUsersFriends = new ArrayList<>();
+    private String mCurrentUserEmail;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -58,34 +60,63 @@ public class FriendsListActivity extends AppCompatActivity {
     private void showUserList(){
         mFriendListAdapter = new FirebaseListAdapter<User>(this, User.class, R.layout.friend_item, mUserDatabaseReference) {
             @Override
-            protected void populateView(View view, User user, final int position) {
+            protected void populateView(final View view, User user, final int position) {
                 //Log.e("TAG", user.toString());
-                final String username = user.getUsername();
                 final String email = user.getEmail();
                 //Check if this user is already your friend
-                Query isFriend = mCurrentUsersFriends.equalTo(email);
+                final DatabaseReference friendRef =
+                        mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
+                                + "/" + mCurrentUserEmail + "/" + encodeEmail(email));
 
-                if(isFriend.toString() == null){
-                    Log.e(TAG, "This user is not your friend yet");
-                }
+                friendRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.getValue() != null){
+                            Log.w(TAG, "User is friend");
+                            view.findViewById(R.id.addFriend).setVisibility(View.GONE);
+                            view.findViewById(R.id.removeFriend).setVisibility(View.VISIBLE);
+                        }else{
+                            Log.w(TAG, "User is not friend");
+                            view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
+                            view.findViewById(R.id.addFriend).setVisibility(View.VISIBLE);
+                        }
+                    }
 
-                ((TextView)view.findViewById(R.id.messageTextView)).setText(username);
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+//                friendRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+
+                ((TextView)view.findViewById(R.id.messageTextView)).setText(email);
                 (view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e(TAG, "Clicking row: " + position);
-                        Log.e(TAG, "Clicking user: " + username);
+                        Log.w(TAG, "Clicking row: " + position);
+                        Log.w(TAG, "Clicking user: " + email);
                         //Add this user to your friends list, by email
-                        addNewFriend(email); //change to send email
+                        addNewFriend(email);
                     }
                 });
                 (view.findViewById(R.id.removeFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e(TAG, "Clicking row: " + position);
-                        Log.e(TAG, "Clicking user: " + username);
+                        Log.w(TAG, "Clicking row: " + position);
+                        Log.w(TAG, "Clicking user: " + email);
                         //Add this user to your friends list, by email
-                        removeFriend(email); //change to send email
+                        removeFriend(email);
                     }
                 });
             }
@@ -138,6 +169,7 @@ public class FriendsListActivity extends AppCompatActivity {
     private void initializeScreen(){
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mCurrentUserEmail = encodeEmail(mFirebaseAuth.getCurrentUser().getEmail().toString());
         //Eventually this list will filter out users that are already your friend
         mUserDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION);
         mCurrentUsersFriends = mFirebaseDatabase.getReference().child(Constants.FRIENDS_LOCATION
