@@ -9,14 +9,22 @@
     android:layout_marginStart="@dimen/activity_horizontal_margin"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageMessage"
-        android:layout_width="140dp"
-        android:layout_height="137dp"
-        android:adjustViewBounds="true"
-        android:background="@color/cardview_dark_background"
-        android:visibility="gone"
-        android:scaleType="fitCenter" />
+    <!--<ImageView-->
+        <!--android:id="@+id/imageMessage"-->
+        <!--android:layout_width="140dp"-->
+        <!--android:layout_height="137dp"-->
+        <!--android:adjustViewBounds="true"-->
+        <!--android:background="@color/cardview_dark_background"-->
+        <!--android:visibility="gone"-->
+        <!--android:scaleType="fitCenter" />-->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/imageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:orientation="vertical">
+        </LinearLayout>
 
     <TextView
         android:id="@+id/messageTextView"

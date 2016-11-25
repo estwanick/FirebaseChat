@@ -37,8 +37,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -52,6 +55,7 @@ import java.util.Map;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Message;
+import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
 
 public class ChatMessagesActivity extends AppCompatActivity {
@@ -82,8 +86,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
     private String mFileName = null;
 
     private static final String LOG_TAG = "Record_log";
-
-
+    private ValueEventListener mValueEventListener;
 
 
     @Override
@@ -337,6 +340,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
             @Override
             protected void populateView(View view, Message message, final int position) {
                 LinearLayout messageLine = (LinearLayout) view.findViewById(R.id.messageLine);
+                LinearLayout imageLayout = (LinearLayout) view.findViewById(R.id.imageLayout);
                 TextView messgaeText = (TextView) view.findViewById(R.id.messageTextView);
                 TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
 
@@ -360,20 +364,17 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 }
 
                 //If this is multimedia display it
+                //final ImageView imageMessage = (ImageView) view.findViewById(R.id.imageMessage);
                 if(message.getMultimedia()){
-                    final ImageView imageMessage = (ImageView) view.findViewById(R.id.imageMessage);
-                    imageMessage.setVisibility(View.VISIBLE);
-                    String imageLocation = message.getContentLocation();
-                    StorageReference imageRef = FirebaseStorage.getInstance()
-                            .getReference().child(imageLocation);
+                    StorageReference storageRef = FirebaseStorage.getInstance()
+                            .getReference().child(message.getContentLocation());
+                    ImageView imageView = new ImageView(view.getContext());
+                    imageView.setLayoutParams(new Toolbar.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
+                            Toolbar.LayoutParams.WRAP_CONTENT));
+                    imageLayout.addView(imageView);
 
-
-//                    Glide.with(view.getContext())
-//                            .using(new FirebaseImageLoader())
-//                            .load(imageRef)
-//                            .into(imageMessage);
+                    //Display images
                 }
-
             }
         };
         mMessageList.setAdapter(mMessageListAdapter);
