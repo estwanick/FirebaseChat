@@ -67,7 +67,6 @@ public class FriendsListActivity extends AppCompatActivity {
                 final DatabaseReference friendRef =
                         mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
                                 + "/" + mCurrentUserEmail + "/" + encodeEmail(email));
-
                 friendRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -87,18 +86,6 @@ public class FriendsListActivity extends AppCompatActivity {
 
                     }
                 });
-
-//                friendRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
 
                 ((TextView)view.findViewById(R.id.messageTextView)).setText(email);
                 (view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
