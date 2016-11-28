@@ -69,10 +69,15 @@ public class ChatActivity extends AppCompatActivity {
         //TODO: This list should not show your own userid..
         mFriendListAdapter = new FirebaseListAdapter<String>(this, String.class, R.layout.friend_item, mFriendsLocationDatabaseReference) {
             @Override
-            protected void populateView(View view, final String friend, final int position) {
+            protected void populateView(final View view, final String friend, final int position) {
                 Log.e("TAG", friend);
                 final Friend addFriend = new Friend(friend);
                 ((TextView) view.findViewById(R.id.messageTextView)).setText(friend);
+                //Hide remove button by default, we have to do this because we reuse the view
+                if(mChat.getFriends().isEmpty()){
+                    view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
+                }
+                //view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
                 (view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -89,7 +94,8 @@ public class ChatActivity extends AppCompatActivity {
                             friendsString = friendsString.substring(0, friendsString.length() - 2);
                             mFriendsInChat.setText("Users added to chat: " + friendsString);
                         }
-
+                        view.findViewById(R.id.removeFriend).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.addFriend).setVisibility(View.GONE);
                         Log.e(TAG, "Adding to chat: " + friend);
                     }
                 });
@@ -111,7 +117,8 @@ public class ChatActivity extends AppCompatActivity {
                         }else{
                             mFriendsInChat.setText("Users added to chat: ");
                         }
-
+                        view.findViewById(R.id.addFriend).setVisibility(View.VISIBLE);
+                        view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
                         Log.e(TAG, "Removing from chat: " + friend);
                     }
                 });

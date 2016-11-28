@@ -8,9 +8,9 @@ public class Message {
 
     private String sender;
     private String message;
-    private Boolean isMultimedia;
-    private String contentType;
-    private String contentLocation;
+    private Boolean multimedia = false;
+    private String contentType = "";
+    private String contentLocation = "";
 
     public Message(){
 
@@ -20,14 +20,14 @@ public class Message {
     public Message(String sender, String message){
         this.sender = sender;
         this.message = message;
-        this.isMultimedia = false;
+        this.multimedia = false;
     }
 
     //Constructor for Multimedia message
     public Message(String sender, String message, String contentType, String contentLocation){
         this.sender = sender;
         this.message = message;
-        this.isMultimedia = true;
+        this.multimedia = true;
         this.contentType = contentType;
         this.contentLocation = contentLocation;
     }
@@ -45,7 +45,7 @@ public class Message {
     }
 
     public Boolean getMultimedia() {
-        return isMultimedia;
+        return multimedia;
     }
 
     public String getContentType() {
