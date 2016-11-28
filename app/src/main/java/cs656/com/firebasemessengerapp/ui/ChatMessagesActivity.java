@@ -159,7 +159,6 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
     }
 
-    //Add listener for on completion of voice message
     public void openVoiceRecorder(){
         //Implement voice selection
         mrecordVoiceButton =(ImageButton) findViewById(R.id.recordVoiceButton);
