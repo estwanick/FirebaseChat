@@ -59,7 +59,6 @@ public class ChatMessagesActivity extends AppCompatActivity {
     private DatabaseReference mMessageDatabaseReference;
     private FirebaseListAdapter<Message> mMessageListAdapter;
     private FirebaseAuth mFirebaseAuth;
-    private Message mMessage;
 
     private ImageButton mphotoPickerButton;
     private static final int GALLERY_INTENT=2;
@@ -99,10 +98,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         showMessages();
         addListeners();
         openImageSelector();
-
-     //   openVoiceRecorder();
-
-
+        openVoiceRecorder();
 
     }
 
@@ -155,7 +151,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
     //Add listener for on completion of voice message
     public void openVoiceRecorder(){
         //Implement voice selection
-        mrecordVoiceButton =(ImageButton) findViewById(R.id.photoPickerButton);
+        mrecordVoiceButton =(ImageButton) findViewById(R.id.recordVoiceButton);
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/recorded_audio.3gp";
@@ -168,13 +164,13 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
                     startRecording();
 
-                    mRecordLable.setText("Recording started...");
+            //        mRecordLable.setText("Recording started...");
                 }
                 else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
 
                     stopRecording();
 
-                    mRecordLable.setText("Recording stopped...");
+             //       mRecordLable.setText("Recording stopped...");
                 }
                 return false;
             }
@@ -228,7 +224,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
                 mProgress.dismiss();
 
-                mRecordLable.setText("Uploading Finished...");
+       //         mRecordLable.setText("Uploading Finished...");
 
             }
         });
