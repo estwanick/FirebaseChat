@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Message;
@@ -145,7 +146,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
             //Keep all images for a specific chat grouped together
             final String imageLocation = "Photos" + "/" + messageId;
             final String imageLocationId = imageLocation + "/" + uri.getLastPathSegment();
-            final StorageReference filepath = mStorage.child(imageLocation).child(uri.getLastPathSegment());
+            final String uniqueId = UUID.randomUUID().toString();
+            final StorageReference filepath = mStorage.child(imageLocation).child(uniqueId + "/image_message");
             final String downloadURl = filepath.getPath();
             filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -225,7 +227,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
         //Keep all voice for a specific chat grouped together
         final String voiceLocation = "Voice" + "/" + messageId;
         final String voiceLocationId = voiceLocation + "/" + uri.getLastPathSegment();
-        final StorageReference filepath = mStorage.child(voiceLocation).child(uri.getLastPathSegment());
+        final String uniqueId = UUID.randomUUID().toString();
+        final StorageReference filepath = mStorage.child(voiceLocation).child(uniqueId + "/audio_message.3gp");
         final String downloadURl = filepath.getPath();
 
         filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
