@@ -117,11 +117,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
     //Add listener for on completion of image selection
     public void openImageSelector(){
-        //implement image selection
         mphotoPickerButton = (ImageButton) findViewById(R.id.photoPickerButton);
-
         mProgress = new ProgressDialog(this);
-
         mphotoPickerButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -130,8 +127,6 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 startActivityForResult(intent, GALLERY_INTENT);
             }
         });
-
-        //on complete: sendImage()
     }
 
 
@@ -155,11 +150,9 @@ public class ChatMessagesActivity extends AppCompatActivity {
             filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                    mProgress.dismiss();
                     //create a new message containing this image
                     addImageToMessages(downloadURl);
-
+                    mProgress.dismiss();
                 }
             });
         }
@@ -220,9 +213,6 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mRecorder = null;
 
         uploadAudio();
-
-
-        //   sendAudio();
     }
 
     private void uploadAudio() {
@@ -232,18 +222,18 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mProgress.setMessage("Uploading Audio...");
         mProgress.show();
 
-        StorageReference filepath = mStorage.child("Audio").child("new_audio.3gp");
-
         Uri uri = Uri.fromFile(new File(mFileName));
+        //Keep all voice for a specific chat grouped together
+        final String voiceLocation = "Voice" + "/" + messageId;
+        final String voiceLocationId = voiceLocation + "/" + uri.getLastPathSegment();
+        final StorageReference filepath = mStorage.child(voiceLocation).child(uri.getLastPathSegment());
+        final String downloadURl = filepath.getPath();
 
         filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
+                addVoiceToMessages(downloadURl);
                 mProgress.dismiss();
-
-       //         mRecordLable.setText("Uploading Finished...");
-
             }
         });
     }
@@ -269,19 +259,28 @@ public class ChatMessagesActivity extends AppCompatActivity {
         });
     }
 
-    //If image or voice message add them to Firebase.Storage
-    public void sendVoice(){
+    //If voice message add them to Firebase.Storage
+    public void addVoiceToMessages(String voiceLocation){
         final DatabaseReference pushRef = mMessageDatabaseReference.push();
         final String pushKey = pushRef.getKey();
-        //Use the pushkey as a reference from the corresponding chat/message
 
-        //Step 1: submit to firebase storage
-
-        String imgUrlLocation = ""; //add the firebase storage url for images
-        //Step 2: add to firebase database under messages
-        //Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, false, "text");
-
-    };
+        //Create message object with text/voice etc
+        Message message =
+                new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()),
+                        "Message: Voice Sent", "VOICE", voiceLocation);
+        //Create HashMap for Pushing
+        HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
+        HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
+                .convertValue(message, Map.class);
+        messageItemMap.put("/" + pushKey, messageObj);
+        mMessageDatabaseReference.updateChildren(messageItemMap)
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        mMessageField.setText("");
+                    }
+                });
+    }
 
 
     //Send image messages from here
@@ -400,12 +399,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
         });
     }
 
-
-
-
-
     //TODO: Used in multiple places, should probably move to its own class
-    public static String encodeEmail(String userEmail) {
+    public String encodeEmail(String userEmail) {
         return userEmail.replace(".", ",");
     }
 
