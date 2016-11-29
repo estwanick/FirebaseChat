@@ -45,6 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -360,18 +361,24 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 }
 
                 //If this is multimedia display it
-                //final ImageView imageMessage = (ImageView) view.findViewById(R.id.imageMessage);
+                final ImageView imageView = (ImageView) view.findViewById(R.id.imageMessage);
                 if(message.getMultimedia()){
                     if(message.getContentType().equals("IMAGE")) {
-                        ImageView imageView = (ImageView) view.findViewById(R.id.imageMessage);
                         StorageReference storageRef = FirebaseStorage.getInstance()
                                 .getReference().child(message.getContentLocation());
                         imageView.setVisibility(View.VISIBLE);
+                        //storageRef.getDownloadUrl().addOnCompleteListener(new O)
                         Glide.with(view.getContext())
                                 .using(new FirebaseImageLoader())
                                 .load(storageRef)
                                 .into(imageView);
+                    }else{
+                        imageView.setVisibility(View.GONE);
+                        imageView.setImageDrawable(null);
                     }
+                }else{
+                    imageView.setVisibility(View.GONE);
+                    imageView.setImageDrawable(null);
                 }
             }
         };

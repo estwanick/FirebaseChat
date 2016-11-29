@@ -46,6 +46,9 @@ dependencies {
     // FirebaseUI
     compile 'com.firebaseui:firebase-ui:0.6.0'
     compile 'com.google.android.gms:play-services-appindexing:9.6.0'
+
+    //Picasso
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
