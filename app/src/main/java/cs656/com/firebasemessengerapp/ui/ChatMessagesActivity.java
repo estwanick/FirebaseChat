@@ -337,7 +337,6 @@ public class ChatMessagesActivity extends AppCompatActivity {
             @Override
             protected void populateView(View view, Message message, final int position) {
                 LinearLayout messageLine = (LinearLayout) view.findViewById(R.id.messageLine);
-                LinearLayout imageLayout = (LinearLayout) view.findViewById(R.id.imageLayout);
                 TextView messgaeText = (TextView) view.findViewById(R.id.messageTextView);
                 TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
 
@@ -363,14 +362,16 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 //If this is multimedia display it
                 //final ImageView imageMessage = (ImageView) view.findViewById(R.id.imageMessage);
                 if(message.getMultimedia()){
-                    StorageReference storageRef = FirebaseStorage.getInstance()
-                            .getReference().child(message.getContentLocation());
-                    ImageView imageView = new ImageView(view.getContext());
-                    imageView.setLayoutParams(new Toolbar.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
-                            Toolbar.LayoutParams.WRAP_CONTENT));
-                    imageLayout.addView(imageView);
-
-                    //Display images
+                    if(message.getContentType().equals("IMAGE")) {
+                        ImageView imageView = (ImageView) view.findViewById(R.id.imageMessage);
+                        StorageReference storageRef = FirebaseStorage.getInstance()
+                                .getReference().child(message.getContentLocation());
+                        imageView.setVisibility(View.VISIBLE);
+                        Glide.with(view.getContext())
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .into(imageView);
+                    }
                 }
             }
         };
