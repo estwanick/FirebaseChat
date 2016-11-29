@@ -45,6 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -52,6 +53,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Message;
@@ -145,7 +147,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
             //Keep all images for a specific chat grouped together
             final String imageLocation = "Photos" + "/" + messageId;
             final String imageLocationId = imageLocation + "/" + uri.getLastPathSegment();
-            final StorageReference filepath = mStorage.child(imageLocation).child(uri.getLastPathSegment());
+            final String uniqueId = UUID.randomUUID().toString();
+            final StorageReference filepath = mStorage.child(imageLocation).child(uniqueId + "/image_message");
             final String downloadURl = filepath.getPath();
             filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -226,7 +229,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
         //Keep all voice for a specific chat grouped together
         final String voiceLocation = "Voice" + "/" + messageId;
         final String voiceLocationId = voiceLocation + "/" + uri.getLastPathSegment();
-        final StorageReference filepath = mStorage.child(voiceLocation).child(uri.getLastPathSegment());
+        final String uniqueId = UUID.randomUUID().toString();
+        final StorageReference filepath = mStorage.child(voiceLocation).child(uniqueId + "/audio_message.3gp");
         final String downloadURl = filepath.getPath();
 
         filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -337,7 +341,6 @@ public class ChatMessagesActivity extends AppCompatActivity {
             @Override
             protected void populateView(View view, Message message, final int position) {
                 LinearLayout messageLine = (LinearLayout) view.findViewById(R.id.messageLine);
-                LinearLayout imageLayout = (LinearLayout) view.findViewById(R.id.imageLayout);
                 TextView messgaeText = (TextView) view.findViewById(R.id.messageTextView);
                 TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
 
@@ -361,16 +364,24 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 }
 
                 //If this is multimedia display it
-                //final ImageView imageMessage = (ImageView) view.findViewById(R.id.imageMessage);
+                final ImageView imageView = (ImageView) view.findViewById(R.id.imageMessage);
                 if(message.getMultimedia()){
-                    StorageReference storageRef = FirebaseStorage.getInstance()
-                            .getReference().child(message.getContentLocation());
-                    ImageView imageView = new ImageView(view.getContext());
-                    imageView.setLayoutParams(new Toolbar.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
-                            Toolbar.LayoutParams.WRAP_CONTENT));
-                    imageLayout.addView(imageView);
-
-                    //Display images
+                    if(message.getContentType().equals("IMAGE")) {
+                        StorageReference storageRef = FirebaseStorage.getInstance()
+                                .getReference().child(message.getContentLocation());
+                        imageView.setVisibility(View.VISIBLE);
+                        //storageRef.getDownloadUrl().addOnCompleteListener(new O)
+                        Glide.with(view.getContext())
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .into(imageView);
+                    }else{
+                        imageView.setVisibility(View.GONE);
+                        imageView.setImageDrawable(null);
+                    }
+                }else{
+                    imageView.setVisibility(View.GONE);
+                    imageView.setImageDrawable(null);
                 }
             }
         };
