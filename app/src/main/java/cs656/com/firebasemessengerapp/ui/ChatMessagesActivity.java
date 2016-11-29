@@ -138,7 +138,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
         if(requestCode ==GALLERY_INTENT && resultCode == RESULT_OK){
 
-            mProgress.setMessage("Uploading...");
+            mProgress.setMessage("Sending the image...");
             mProgress.show();
 
             Uri uri = data.getData();
@@ -162,6 +162,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
     public void openVoiceRecorder(){
         //Implement voice selection
         mrecordVoiceButton =(ImageButton) findViewById(R.id.recordVoiceButton);
+        mRecordLable = (TextView) findViewById(R.id.recordLable);
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/recorded_audio.3gp";
@@ -174,13 +175,14 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
                     startRecording();
 
-            //        mRecordLable.setText("Recording started...");
+                    mRecordLable.setText("Recording started...");
                 }
                 else if (motionEvent.getAction() == MotionEvent.ACTION_UP){
 
                     stopRecording();
 
-             //       mRecordLable.setText("Recording stopped...");
+                    mRecordLable.setText("Recording stopped...");
+
                 }
                 return false;
             }
@@ -210,7 +212,6 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
-
         uploadAudio();
     }
 
@@ -218,7 +219,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
         mStorage = FirebaseStorage.getInstance().getReference();
 
-        mProgress.setMessage("Uploading Audio...");
+        mProgress.setMessage("Sending the Audio...");
         mProgress.show();
 
         Uri uri = Uri.fromFile(new File(mFileName));
@@ -233,6 +234,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 addVoiceToMessages(downloadURl);
                 mProgress.dismiss();
+                mRecordLable.setText("Tap and Hold the Phone Button to Record");
+
             }
         });
     }
