@@ -19,6 +19,15 @@ tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity">
         android:background="?attr/colorAccent"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+    <TextView
+        android:text="Tap and Hold the Phone Button to Record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/recordLable"
+        android:layout_weight="1"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
+
 </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
@@ -32,16 +41,6 @@ tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity">
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity"
         tools:showIn="@layout/activity_main">
-
-        <ListView
-            android:id="@+id/messageListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:stackFromBottom="true"
-            android:layout_above="@+id/linearLayout"
-            android:divider="@android:color/transparent"
-            android:transcriptMode="alwaysScroll"
-            tools:listitem="@layout/message_item" />
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -81,6 +80,17 @@ tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity">
                 android:text="Send"/>
 
         </LinearLayout>
+
+        <ListView
+            android:id="@+id/messageListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stackFromBottom="true"
+            android:divider="@android:color/transparent"
+            android:transcriptMode="alwaysScroll"
+            tools:listitem="@layout/message_item"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/linearLayout" />
 
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
