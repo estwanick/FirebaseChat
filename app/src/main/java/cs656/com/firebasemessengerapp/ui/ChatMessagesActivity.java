@@ -346,6 +346,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
                 ImageView leftImage = (ImageView) view.findViewById(R.id.leftMessagePic);
                 ImageView rightImage = (ImageView) view.findViewById(R.id.rightMessagePic);
+                LinearLayout individMessageLayout = (LinearLayout)view.findViewById(R.id.individMessageLayout);
 
                 messgaeText.setText(message.getMessage());
                 senderText.setText(message.getSender());
@@ -358,7 +359,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     messageLine.setGravity(Gravity.RIGHT);
                     leftImage.setVisibility(View.GONE);
                     rightImage.setVisibility(View.VISIBLE);
-
+                    individMessageLayout.setBackground(getResources().getDrawable(R.drawable.roundedmessagescolored));
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     //       R.color.colorAccent, null));
                 }else{
