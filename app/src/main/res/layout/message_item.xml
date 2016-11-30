@@ -19,7 +19,7 @@
         android:background="@drawable/roundedmessages"
         android:paddingLeft="20dp"
         android:paddingTop="10dp"
-        android:paddingBottom="30dp"
+        android:paddingBottom="10dp"
         android:paddingRight="20dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="0dp"
@@ -34,19 +34,24 @@
             android:visibility="gone"
             android:layout_height="56dp" />
 
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:id="@+id/voiceMessageButton"
+            android:visibility="gone"
+            android:background="@drawable/playbuttontransparant"/>
+
         <TextView
             android:id="@+id/messageTextView"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
-
             android:textAppearance="?android:attr/textAppearanceSmall"
             tools:text="Message" />
         <TextView
             android:id="@+id/senderTextView"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:layout_gravity="bottom"
             tools:text="Sender" />
 

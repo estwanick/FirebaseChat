@@ -382,6 +382,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
                                 .load(storageRef)
                                 .into(imageView);
                     }else{
+                        ImageButton activateVoiceMsg = (ImageButton)view.findViewById(R.id.voiceMessageButton);
+                        activateVoiceMsg.setVisibility(View.VISIBLE);
                         imageView.setVisibility(View.GONE);
                         imageView.setImageDrawable(null);
                     }
