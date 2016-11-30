@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"
-            android:id="@+id/imageView3"
+            android:id="@+id/profilePicture"
             android:layout_weight="1" />
 
     </LinearLayout>

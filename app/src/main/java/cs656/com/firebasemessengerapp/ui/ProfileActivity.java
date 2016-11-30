@@ -1,27 +1,39 @@
 package cs656.com.firebasemessengerapp.ui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import cs656.com.firebasemessengerapp.R;
+import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.utils.Constants;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -33,6 +45,9 @@ public class ProfileActivity extends AppCompatActivity {
     private StorageReference mStorage;
     private FirebaseAuth mFirebaseAuth;
     private String currentUserEmail;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mCurrentUserDatabaseReference;
+    private View mView;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -64,7 +79,7 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     //create a new message containing this image
-                    //addImageToMessages(downloadURl);
+                    addImageToProfile(downloadURl);
                     mProgress.dismiss();
                 }
             });
@@ -72,7 +87,27 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    public void addImageToProfile(final String imageLocation){
+        final ImageView imageView = (ImageView) findViewById(R.id.profilePicture);
+        mCurrentUserDatabaseReference
+                .child("profilePicLocation").setValue(imageLocation).addOnCompleteListener(
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        StorageReference storageRef = FirebaseStorage.getInstance()
+                                .getReference().child(imageLocation);
+                        Glide.with(mView.getContext())
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .into(imageView);
+                    }
+                }
+        );
+
+    }
+
     public void openImageSelector(){
+
         mphotoPickerButton = (ImageButton) findViewById(R.id.imageButton);
         mProgress = new ProgressDialog(this);
         mphotoPickerButton.setOnClickListener(new View.OnClickListener(){
@@ -81,12 +116,16 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, GALLERY_INTENT);
+                mView = view;
             }
         });
     }
 
     private void initializeScreen(){
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mCurrentUserDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION
+                + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
         currentUserEmail = encodeEmail(mFirebaseAuth.getCurrentUser().getEmail());
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setTitle("Profile");

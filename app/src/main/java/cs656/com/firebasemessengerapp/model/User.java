@@ -7,6 +7,7 @@ public class User {
 
     private String username;
     private String email;
+    private String profilePicLocation;
     private HashMap<String, Object> timestampJoined;
 
     public User(){
