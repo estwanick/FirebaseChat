@@ -1,34 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/messageLine"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginStart="@dimen/activity_horizontal_margin"
-    android:orientation="vertical">
-
-
+    android:orientation="horizontal">
     <ImageView
-        android:layout_width="56dp"
-        app:srcCompat="@drawable/com_facebook_button_like_background"
-        android:id="@+id/imageMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/leftMessagePic"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/ic_launcher"/>
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/roundedmessages"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="30dp"
+        android:paddingRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/individMessageLayout"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="56dp"
+            app:srcCompat="@drawable/com_facebook_button_like_background"
+            android:id="@+id/imageMessage"
+            android:visibility="gone"
+            android:layout_height="56dp" />
+
+        <TextView
+            android:id="@+id/messageTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            tools:text="Message" />
+        <TextView
+            android:id="@+id/senderTextView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_gravity="bottom"
+            tools:text="Sender" />
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:id="@+id/rightMessagePic"
         android:visibility="gone"
-        android:layout_height="56dp" />
-
-    <TextView
-        android:id="@+id/messageTextView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:text="Message" />
-
-    <TextView
-        android:id="@+id/senderTextView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0"
-        tools:text="Sender" />
-
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/ic_launcher"/>
 </LinearLayout>

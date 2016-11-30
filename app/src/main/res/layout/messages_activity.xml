@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:fitsSystemWindows="true"
-tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity">
-
-<android.support.design.widget.AppBarLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:theme="@style/AppTheme.AppBarOverlay">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorAccent"
-        app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    <TextView
-        android:text="Tap and Hold the Phone Button to Record"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/recordLable"
-        android:layout_weight="1"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-</android.support.design.widget.AppBarLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorAccent"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <TextView
+            android:text="Tap and Hold the Phone Button to Record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/recordLable"
+            android:layout_weight="1"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true" />
+
+    </android.support.design.widget.AppBarLayout>
 
     <RelativeLayout
         android:id="@+id/content_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/graygradient"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -42,23 +42,34 @@ tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity">
         tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity"
         tools:showIn="@layout/activity_main">
 
+        <ListView
+            android:id="@+id/messageListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stackFromBottom="true"
+            android:layout_above="@+id/linearLayout"
+            android:divider="@android:color/transparent"
+            android:transcriptMode="alwaysScroll"
+            tools:listitem="@layout/message_item" />
+
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/recordVoiceButton"
-                android:layout_width="wrap_content"
+                android:id="@+id/photoPickerButton"
+                android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:background="@android:drawable/ic_menu_call" />
 
             <ImageButton
-                android:id="@+id/photoPickerButton"
+                android:id="@+id/recordVoiceButton"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:background="@android:drawable/ic_menu_gallery" />
@@ -70,27 +81,17 @@ tools:context="cs656.com.firebasemessengerapp.ui.ChatMessagesActivity">
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
 
-            <Button
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:enabled="false"
+            <ImageButton
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:onClick="sendMessage"
-                android:text="Send"/>
+                android:layout_gravity="bottom"
+                android:id="@+id/sendButton"
+                android:background="@android:drawable/ic_menu_send" />
+
 
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/messageListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:stackFromBottom="true"
-            android:divider="@android:color/transparent"
-            android:transcriptMode="alwaysScroll"
-            tools:listitem="@layout/message_item"
-            android:layout_alignParentStart="true"
-            android:layout_above="@+id/linearLayout" />
-
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>
+
