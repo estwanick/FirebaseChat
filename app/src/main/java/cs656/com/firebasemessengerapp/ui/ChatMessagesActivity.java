@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -338,7 +340,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
     private void showMessages() {
         mMessageListAdapter = new FirebaseListAdapter<Message>(this, Message.class, R.layout.message_item, mMessageDatabaseReference) {
             @Override
-            protected void populateView(View view, Message message, final int position) {
+            protected void populateView(View view, final Message message, final int position) {
                 LinearLayout messageLine = (LinearLayout) view.findViewById(R.id.messageLine);
                 TextView messgaeText = (TextView) view.findViewById(R.id.messageTextView);
                 TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
@@ -382,10 +384,34 @@ public class ChatMessagesActivity extends AppCompatActivity {
                                 .load(storageRef)
                                 .into(imageView);
                     }else{
+                        //show play button
                         ImageButton activateVoiceMsg = (ImageButton)view.findViewById(R.id.voiceMessageButton);
                         activateVoiceMsg.setVisibility(View.VISIBLE);
+                        //hide imageview
                         imageView.setVisibility(View.GONE);
                         imageView.setImageDrawable(null);
+
+                        activateVoiceMsg.setOnClickListener( new View.OnClickListener() {
+
+                            @Override
+                            public void onClick(View v) {
+                                StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(message.getContentLocation());
+                                storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        playSound(uri);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle any errors
+                                    }
+                                });
+
+                            }
+                        });
+
+
                     }
                 }else{
                     imageView.setVisibility(View.GONE);
@@ -394,6 +420,33 @@ public class ChatMessagesActivity extends AppCompatActivity {
             }
         };
         mMessageList.setAdapter(mMessageListAdapter);
+    }
+
+    private void playSound(Uri uri){
+        MediaPlayer mediaPlayer = new MediaPlayer();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mediaPlayer.setDataSource(uri.toString());
+        }catch(Exception e){
+
+        }
+        mediaPlayer.prepareAsync();
+        //You can show progress dialog here untill it prepared to play
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                //Now dismis progress dialog, Media palyer will start playing
+                mp.start();
+            }
+        });
+        mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mp, int what, int extra) {
+                // dissmiss progress bar here. It will come here when MediaPlayer
+                //  is not able to play file. You can show error message to user
+                return false;
+            }
+        });
     }
 
     private void initializeScreen() {
