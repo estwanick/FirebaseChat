@@ -384,33 +384,34 @@ public class ChatMessagesActivity extends AppCompatActivity {
                                 .load(storageRef)
                                 .into(imageView);
                     }else{
-                        //show play button
-                        ImageButton activateVoiceMsg = (ImageButton)view.findViewById(R.id.voiceMessageButton);
-                        activateVoiceMsg.setVisibility(View.VISIBLE);
-                        //hide imageview
-                        imageView.setVisibility(View.GONE);
-                        imageView.setImageDrawable(null);
+                        if(message.getContentType().equals("VOICE")) {
+                            //show play button
+                            ImageButton activateVoiceMsg = (ImageButton) view.findViewById(R.id.voiceMessageButton);
+                            activateVoiceMsg.setVisibility(View.VISIBLE);
+                            //hide imageview
+                            imageView.setVisibility(View.GONE);
+                            imageView.setImageDrawable(null);
 
-                        activateVoiceMsg.setOnClickListener( new View.OnClickListener() {
+                            activateVoiceMsg.setOnClickListener(new View.OnClickListener() {
 
-                            @Override
-                            public void onClick(View v) {
-                                StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(message.getContentLocation());
-                                storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        playSound(uri);
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Handle any errors
-                                    }
-                                });
+                                @Override
+                                public void onClick(View v) {
+                                    StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(message.getContentLocation());
+                                    storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            playSound(uri);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception exception) {
+                                            // Handle any errors
+                                        }
+                                    });
 
-                            }
-                        });
-
+                                }
+                            });
+                        }
 
                     }
                 }else{
