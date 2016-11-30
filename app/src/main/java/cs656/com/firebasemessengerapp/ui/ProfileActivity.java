@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,6 +23,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -34,6 +38,7 @@ import java.util.UUID;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Message;
+import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -55,6 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.profile_activity);
         initializeScreen();
         openImageSelector();
+        initializeUserInfo();
     }
 
     @Override
@@ -119,6 +125,43 @@ public class ProfileActivity extends AppCompatActivity {
                 mView = view;
             }
         });
+    }
+
+    private void initializeUserInfo(){
+        mCurrentUserDatabaseReference
+                .addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        final ImageView imageView = (ImageView) findViewById(R.id.profilePicture);
+                        User mUser = dataSnapshot.getValue(User.class); // FIX THIS
+                        StorageReference storageRef = FirebaseStorage.getInstance()
+                                .getReference().child(mUser.getProfilePicLocation());
+                        Glide.with(mView.getContext())
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .into(imageView);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private void initializeScreen(){

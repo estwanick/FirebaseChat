@@ -28,6 +28,10 @@ public class User {
         return email;
     }
 
+    public String getProfilePicLocation() {
+        return profilePicLocation;
+    }
+
     public HashMap<String, Object> getTimestampJoined() {
         return timestampJoined;
     }

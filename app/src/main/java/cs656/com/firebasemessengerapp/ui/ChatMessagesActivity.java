@@ -359,7 +359,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     messageLine.setGravity(Gravity.RIGHT);
                     leftImage.setVisibility(View.GONE);
                     rightImage.setVisibility(View.VISIBLE);
-                    individMessageLayout.setBackground(getResources().getDrawable(R.drawable.roundedmessagescolored));
+                    individMessageLayout.setBackgroundResource(R.drawable.roundedmessagescolored);
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     //       R.color.colorAccent, null));
                 }else{
@@ -368,6 +368,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     messageLine.setGravity(Gravity.LEFT);
                     leftImage.setVisibility(View.VISIBLE);
                     rightImage.setVisibility(View.GONE);
+                    individMessageLayout.setBackgroundResource(R.drawable.roundedmessages);
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     //       R.color.colorPrimary, null));
                 }
@@ -385,9 +386,9 @@ public class ChatMessagesActivity extends AppCompatActivity {
                                 .load(storageRef)
                                 .into(imageView);
                     }else{
+                        ImageButton activateVoiceMsg = (ImageButton) view.findViewById(R.id.voiceMessageButton);
                         if(message.getContentType().equals("VOICE")) {
                             //show play button
-                            ImageButton activateVoiceMsg = (ImageButton) view.findViewById(R.id.voiceMessageButton);
                             activateVoiceMsg.setVisibility(View.VISIBLE);
                             //hide imageview
                             imageView.setVisibility(View.GONE);
@@ -412,6 +413,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
                                 }
                             });
+                        }else{
+                            activateVoiceMsg.setVisibility(View.GONE);
                         }
 
                     }
