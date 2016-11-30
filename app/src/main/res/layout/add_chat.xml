@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@drawable/graygradient"
         android:layout_marginTop="?attr/actionBarSize">
         <LinearLayout
             android:layout_marginTop="20dp"
@@ -46,8 +47,7 @@
                 android:id="@+id/chat_name"
                 android:layout_weight="1" />
 
-            <Button
-                android:text="->"
+            <ImageButton
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginRight="15dp"
@@ -70,7 +70,7 @@
 
             <TextView
                 android:paddingTop="10dp"
-                android:paddingLeft="5dp"
+                android:paddingLeft="15dp"
                 android:text="User added to chat: "
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
