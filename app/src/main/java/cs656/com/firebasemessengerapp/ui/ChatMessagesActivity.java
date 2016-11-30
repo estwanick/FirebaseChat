@@ -63,7 +63,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
     private String messageId;
     private TextView mMessageField;
-    private Button mSendButton;
+    private ImageButton mSendButton;
     private String chatName;
     private ListView mMessageList;
     private Toolbar mToolBar;
@@ -342,6 +342,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 LinearLayout messageLine = (LinearLayout) view.findViewById(R.id.messageLine);
                 TextView messgaeText = (TextView) view.findViewById(R.id.messageTextView);
                 TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
+                ImageView leftImage = (ImageView) view.findViewById(R.id.leftMessagePic);
+                ImageView rightImage = (ImageView) view.findViewById(R.id.rightMessagePic);
 
                 messgaeText.setText(message.getMessage());
                 senderText.setText(message.getSender());
@@ -352,12 +354,17 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     messgaeText.setGravity(Gravity.RIGHT);
                     senderText.setGravity(Gravity.RIGHT);
                     messageLine.setGravity(Gravity.RIGHT);
+                    leftImage.setVisibility(View.GONE);
+                    rightImage.setVisibility(View.VISIBLE);
+
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     //       R.color.colorAccent, null));
                 }else{
                     messgaeText.setGravity(Gravity.LEFT);
                     senderText.setGravity(Gravity.LEFT);
                     messageLine.setGravity(Gravity.LEFT);
+                    leftImage.setVisibility(View.VISIBLE);
+                    rightImage.setVisibility(View.GONE);
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     //       R.color.colorPrimary, null));
                 }
@@ -391,7 +398,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mMessageList = (ListView) findViewById(R.id.messageListView);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mMessageField = (TextView)findViewById(R.id.messageToSend);
-        mSendButton = (Button)findViewById(R.id.sendButton);
+        mSendButton = (ImageButton)findViewById(R.id.sendButton);
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
