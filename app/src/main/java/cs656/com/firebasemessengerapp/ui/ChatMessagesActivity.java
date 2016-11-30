@@ -375,50 +375,50 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
                 //If this is multimedia display it
                 final ImageView imageView = (ImageView) view.findViewById(R.id.imageMessage);
+                final ImageButton activateVoiceMsg = (ImageButton) view.findViewById(R.id.voiceMessageButton);
                 if(message.getMultimedia()){
                     if(message.getContentType().equals("IMAGE")) {
                         StorageReference storageRef = FirebaseStorage.getInstance()
                                 .getReference().child(message.getContentLocation());
                         imageView.setVisibility(View.VISIBLE);
+                        activateVoiceMsg.setVisibility(View.GONE);
+                        activateVoiceMsg.setImageDrawable(null);
                         //storageRef.getDownloadUrl().addOnCompleteListener(new O)
                         Glide.with(view.getContext())
                                 .using(new FirebaseImageLoader())
                                 .load(storageRef)
                                 .into(imageView);
-                    }else{
-                        ImageButton activateVoiceMsg = (ImageButton) view.findViewById(R.id.voiceMessageButton);
-                        if(message.getContentType().equals("VOICE")) {
-                            //show play button
-                            activateVoiceMsg.setVisibility(View.VISIBLE);
-                            //hide imageview
-                            imageView.setVisibility(View.GONE);
-                            imageView.setImageDrawable(null);
+                    }
+                    if(message.getContentType().equals("VOICE")) {
+                        //show play button
+                        activateVoiceMsg.setVisibility(View.VISIBLE);
+                        //hide imageview
+                        imageView.setVisibility(View.GONE);
+                        imageView.setImageDrawable(null);
 
-                            activateVoiceMsg.setOnClickListener(new View.OnClickListener() {
+                        activateVoiceMsg.setOnClickListener(new View.OnClickListener() {
 
-                                @Override
-                                public void onClick(View v) {
-                                    StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(message.getContentLocation());
-                                    storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            playSound(uri);
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception exception) {
-                                            // Handle any errors
-                                        }
-                                    });
+                            @Override
+                            public void onClick(View v) {
+                                StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(message.getContentLocation());
+                                storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        playSound(uri);
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle any errors
+                                    }
+                                });
 
-                                }
-                            });
-                        }else{
-                            activateVoiceMsg.setVisibility(View.GONE);
-                        }
-
+                            }
+                        });
                     }
                 }else{
+                    activateVoiceMsg.setVisibility(View.GONE);
+                    activateVoiceMsg.setImageDrawable(null);
                     imageView.setVisibility(View.GONE);
                     imageView.setImageDrawable(null);
                 }
