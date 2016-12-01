@@ -46,19 +46,17 @@
         android:layout_width="0dp">
         <Button
             android:id="@+id/addFriend"
-            android:text="+"
             android:layout_gravity="center"
-            android:background="@drawable/roundedbutton"
-            android:layout_width="30dp"
+            android:background="@mipmap/ic_plus_blue"
+            android:layout_width="50dp"
             android:layout_marginRight="8dp"
-            android:layout_height="30dp"/>
+            android:layout_height="50dp"/>
         <Button
             android:id="@+id/removeFriend"
-            android:background="@drawable/roundedbutton"
+            android:background="@mipmap/ic_minus_red"
             android:layout_gravity="center"
-            android:text="-"
-            android:layout_width="30dp"
-            android:layout_height="30dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
 
     </LinearLayout>
 
