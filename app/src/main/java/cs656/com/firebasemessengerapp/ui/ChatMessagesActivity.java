@@ -420,7 +420,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
                         //hide imageview
                         imageView.setVisibility(View.GONE);
                         imageView.setImageDrawable(null);
-
+                        //line below will reduce padding further on play audio image if necessary
+                        //individMessageLayout.setPadding(10,0,0,10);
                         activateVoiceMsg.setOnClickListener(new View.OnClickListener() {
 
                             @Override
