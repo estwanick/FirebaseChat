@@ -35,12 +35,11 @@
             android:layout_height="56dp" />
 
         <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:adjustViewBounds="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:id="@+id/voiceMessageButton"
             android:visibility="gone"
-            android:background="@drawable/playbuttontransparant"/>
+            android:background="@mipmap/ic_play_audio"/>
 
         <TextView
             android:id="@+id/messageTextView"
