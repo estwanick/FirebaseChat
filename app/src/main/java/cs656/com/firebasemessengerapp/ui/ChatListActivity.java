@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -26,12 +29,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Chat;
 import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class ChatListActivity extends AppCompatActivity {
 
@@ -49,6 +55,7 @@ public class ChatListActivity extends AppCompatActivity {
     private FirebaseListAdapter mChatAdapter;
     private String mUsername;
     private ValueEventListener mValueEventListener;
+    private DatabaseReference mUserDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,13 +106,15 @@ public class ChatListActivity extends AppCompatActivity {
                 .child(Constants.USERS_LOCATION
                         + "/" + encodeEmail(user.getEmail()) + "/"
                         + Constants.CHAT_LOCATION );
+        mUserDatabaseReference = mFirebaseDatabase.getReference()
+                .child(Constants.USERS_LOCATION);
 
         //Initialize screen variables
         mChatListView = (ListView) findViewById(R.id.chatListView);
 
         mChatAdapter = new FirebaseListAdapter<Chat>(this, Chat.class, R.layout.chat_item, mChatDatabaseReference) {
             @Override
-            protected void populateView(View view, Chat chat, final int position) {
+            protected void populateView(final View view, Chat chat, final int position) {
                 //Log.e("TAG", "");
                 //final Friend addFriend = new Friend(chat);
                 ((TextView) view.findViewById(R.id.messageTextView)).setText(chat.getChatName());
@@ -116,12 +125,36 @@ public class ChatListActivity extends AppCompatActivity {
                                 + "/" + chat.getUid());
 
                 final TextView latestMessage = (TextView)view.findViewById(R.id.nameTextView);
+                final ImageView senderPic = (ImageView)view.findViewById(R.id.photoImageView);
 
                 messageRef.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                         Message newMsg = dataSnapshot.getValue(Message.class);
                         latestMessage.setText(newMsg.getSender() + ": " + newMsg.getMessage());
+
+                        mUserDatabaseReference.child(newMsg.getSender())
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        User msgSender = dataSnapshot.getValue(User.class);
+                                        if(msgSender != null){
+                                            StorageReference storageRef = FirebaseStorage.getInstance()
+                                                    .getReference().child(msgSender.getProfilePicLocation());
+                                            Glide.with(view.getContext())
+                                                    .using(new FirebaseImageLoader())
+                                                    .load(storageRef)
+                                                    .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                                                    .into(senderPic);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
                     }
 
                     @Override
