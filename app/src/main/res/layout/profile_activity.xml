@@ -23,17 +23,4 @@ tools:context="cs656.com.firebasemessengerapp.ui.ProfileActivity">
 
 <include layout="@layout/profile_content" />
 
-<android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/add_conversation"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
-    android:layout_margin="@dimen/fab_margin"
-    android:src="@drawable/icon_add"
-    android:onClick="createNewChat"
-    app:borderWidth="0dp"
-    app:elevation="6dp"
-    app:pressedTranslationZ="12dp"
-    />
-
 </android.support.design.widget.CoordinatorLayout>

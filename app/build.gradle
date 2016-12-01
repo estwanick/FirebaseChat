@@ -36,6 +36,9 @@ dependencies {
     //Jackson Databind
     compile 'com.fasterxml.jackson.core:jackson-databind:2.7.2'
 
+    //Glide transform
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+
     // Firebase
     compile 'com.google.firebase:firebase-database:9.6.0'
     compile 'com.google.firebase:firebase-auth:9.6.0'

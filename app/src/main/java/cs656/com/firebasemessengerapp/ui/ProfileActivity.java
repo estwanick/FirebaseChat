@@ -41,6 +41,8 @@ import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -144,6 +146,7 @@ public class ProfileActivity extends AppCompatActivity {
                             Glide.with(mView)
                                     .using(new FirebaseImageLoader())
                                     .load(storageRef)
+                                    .bitmapTransform(new CropCircleTransformation(mView))
                                     .into(imageView);
                         }
                     }

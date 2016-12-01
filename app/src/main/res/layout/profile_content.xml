@@ -10,46 +10,115 @@
     android:orientation="vertical">
 
 
+    <TextView
+        android:text="Personal Info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:layout_weight="1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textAlignment="center"
+        android:textSize="24sp" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageView
+            android:layout_width="149dp"
+            android:layout_height="176dp"
             app:srcCompat="@drawable/com_facebook_profile_picture_blank_portrait"
-            android:id="@+id/profilePicture"
+            android:id="@+id/profilePicture" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1" />
 
     </LinearLayout>
 
-    <ImageButton
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_add"
-        android:id="@+id/imageButton"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:layout_weight="295">
 
-    <TextView
-        android:text="Personal Info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView3" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Name:"
-        android:ems="10"
-        android:id="@+id/editText3" />
+        <ImageButton
+            android:layout_width="66dp"
+            android:layout_height="53dp"
+            android:id="@+id/imageButton"
+            android:background="@android:drawable/ic_menu_camera"
+            android:elevation="0dp"
+            android:scaleType="fitCenter"
+            android:cropToPadding="true"
+            android:adjustViewBounds="true"
+            android:layout_weight="0.06" />
 
-    <EditText
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="phone"
-        android:ems="10"
-        android:id="@+id/editText4"
-        android:text="Phone:" />
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:text="Name:"
+                android:ems="10"
+                android:id="@+id/editText3"
+                android:textAlignment="viewStart"
+                android:singleLine="false"
+                android:selectAllOnFocus="false" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Change Info"
+                android:layout_width="137dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/submit"
+                tools:text="Change Info" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>
