@@ -64,28 +64,28 @@ public class FriendsListActivity extends AppCompatActivity {
                 //Log.e("TAG", user.toString());
                 final String email = user.getEmail();
                 //Check if this user is already your friend
-                final DatabaseReference friendRef =
-                        mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
-                                + "/" + mCurrentUserEmail + "/" + encodeEmail(email));
-                friendRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.getValue() != null){
-                            Log.w(TAG, "User is friend");
-                            view.findViewById(R.id.addFriend).setVisibility(View.GONE);
-                            view.findViewById(R.id.removeFriend).setVisibility(View.VISIBLE);
-                        }else{
-                            Log.w(TAG, "User is not friend");
-                            view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
-                            view.findViewById(R.id.addFriend).setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+//                final DatabaseReference friendRef =
+//                        mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
+//                                + "/" + mCurrentUserEmail + "/" + encodeEmail(email));
+//                friendRef.addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        if(dataSnapshot.getValue() != null){
+//                            Log.w(TAG, "User is friend");
+//                            view.findViewById(R.id.addFriend).setVisibility(View.GONE);
+//                            view.findViewById(R.id.removeFriend).setVisibility(View.VISIBLE);
+//                        }else{
+//                            Log.w(TAG, "User is not friend");
+//                            view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
+//                            view.findViewById(R.id.addFriend).setVisibility(View.VISIBLE);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
 
                 ((TextView)view.findViewById(R.id.messageTextView)).setText(email);
                 (view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {

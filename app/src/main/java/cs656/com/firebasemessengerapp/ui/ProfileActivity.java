@@ -60,10 +60,10 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_activity);
+        mView = ProfileActivity.this;
         initializeScreen();
         openImageSelector();
         initializeUserInfo();
-        mView = ProfileActivity.this;
     }
 
     @Override
@@ -137,12 +137,15 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        StorageReference storageRef = FirebaseStorage.getInstance()
-                                .getReference().child(user.getProfilePicLocation());
-                        Glide.with(mView)
-                                .using(new FirebaseImageLoader())
-                                .load(storageRef)
-                                .into(imageView);
+                        if(user.getProfilePicLocation() != null){
+                            StorageReference storageRef = FirebaseStorage.getInstance()
+                                    .getReference().child(user.getProfilePicLocation());
+
+                            Glide.with(mView)
+                                    .using(new FirebaseImageLoader())
+                                    .load(storageRef)
+                                    .into(imageView);
+                        }
                     }
 
                     @Override
