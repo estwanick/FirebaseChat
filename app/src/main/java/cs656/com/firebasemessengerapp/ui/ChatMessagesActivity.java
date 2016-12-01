@@ -414,8 +414,8 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 String mSender = message.getSender();
 
                 if(mSender.equals(currentUserEmail)){
-                    messgaeText.setGravity(Gravity.RIGHT);
-                    senderText.setGravity(Gravity.RIGHT);
+                    //messgaeText.setGravity(Gravity.RIGHT);
+                    //senderText.setGravity(Gravity.RIGHT);
                     messageLine.setGravity(Gravity.RIGHT);
                     leftImage.setVisibility(View.GONE);
                     rightImage.setVisibility(View.VISIBLE);
@@ -438,7 +438,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     //       R.color.colorAccent, null));
                 }else{
-                    messgaeText.setGravity(Gravity.LEFT);
+                    //messgaeText.setGravity(Gravity.LEFT);
                     //senderText.setGravity(Gravity.LEFT);
                     messageLine.setGravity(Gravity.LEFT);
                     leftImage.setVisibility(View.VISIBLE);
