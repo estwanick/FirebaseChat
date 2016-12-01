@@ -8,7 +8,6 @@ public class User {
     private String username;
     private String email;
     private String profilePicLocation;
-    private HashMap<String, Object> timestampJoined;
 
     public User(){
 
@@ -17,7 +16,6 @@ public class User {
     public User(String name, String email){
         this.username = name;
         this.email = email;
-        this.timestampJoined = timestampJoined;
     }
 
     public String getUsername() {
@@ -32,7 +30,4 @@ public class User {
         return profilePicLocation;
     }
 
-    public HashMap<String, Object> getTimestampJoined() {
-        return timestampJoined;
-    }
 }
