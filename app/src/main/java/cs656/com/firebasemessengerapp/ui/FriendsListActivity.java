@@ -87,7 +87,8 @@ public class FriendsListActivity extends AppCompatActivity {
                     }
                 });
 
-                ((TextView)view.findViewById(R.id.messageTextView)).setText(email);
+                ((TextView)view.findViewById(R.id.messageTextView)).setText(user.getUsername());
+                ((TextView)view.findViewById(R.id.nameTextView)).setText(email);
                 (view.findViewById(R.id.addFriend)).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

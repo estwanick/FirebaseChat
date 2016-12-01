@@ -30,7 +30,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            tools:text="Message" />
+            tools:text="Message"
+            android:textStyle="normal|bold"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/nameTextView"
@@ -38,7 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="Name" />
+            tools:text="Name"
+            android:textSize="12sp" />
 
     </LinearLayout>
     <LinearLayout android:layout_weight="20"
