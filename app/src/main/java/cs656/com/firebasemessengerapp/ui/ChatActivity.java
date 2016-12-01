@@ -56,6 +56,7 @@ public class ChatActivity extends AppCompatActivity {
 
     //Objects for Chat
     private Chat mChat;
+    private DatabaseReference mUserDatabaseRef;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -72,7 +73,27 @@ public class ChatActivity extends AppCompatActivity {
             protected void populateView(final View view, final String friend, final int position) {
                 Log.e("TAG", friend);
                 final Friend addFriend = new Friend(friend);
-                ((TextView) view.findViewById(R.id.messageTextView)).setText(friend);
+                ((TextView) view.findViewById(R.id.nameTextView)).setText(friend);
+
+                mUserDatabaseRef.child(friend).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User fUser = dataSnapshot.getValue(User.class);
+                        if(fUser != null){
+                            ((TextView) view.findViewById(R.id.messageTextView))
+                                    .setText(fUser.getUsername());
+                        }else{
+                            ((TextView) view.findViewById(R.id.messageTextView))
+                                    .setText("A girl has no name");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
                 //Hide remove button by default, we have to do this because we reuse the view
                 if(mChat.getFriends().isEmpty()){
                     view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
@@ -144,14 +165,6 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void addToConversation(){
-
-    }
-
-    private void removeFromConversation(){
-
-    }
-
     //TODO: Add create new Chat function
     public void createChat(View view){
         //final String userLoggedIn = mFirebaseAuth.getCurrentUser().getEmail();
@@ -215,6 +228,7 @@ public class ChatActivity extends AppCompatActivity {
     private void initializeScreen() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mUserDatabaseRef = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION);
         mCurrentUserDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION
                 + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
         //Eventually this list will filter out users that are already your friend
