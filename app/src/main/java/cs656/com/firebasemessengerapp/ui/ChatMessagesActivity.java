@@ -2,6 +2,7 @@ package cs656.com.firebasemessengerapp.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -90,6 +92,24 @@ public class ChatMessagesActivity extends AppCompatActivity {
     private static final String LOG_TAG = "Record_log";
     private ValueEventListener mValueEventListener;
 
+    //Audio Runtime Permissions
+    private boolean permissionToRecordAccepted = false;
+    private boolean permissionToWriteAccepted = false;
+    private String [] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case 200:
+                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                permissionToWriteAccepted  = grantResults[1] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToRecordAccepted ) ChatMessagesActivity.super.finish();
+        if (!permissionToWriteAccepted ) ChatMessagesActivity.super.finish();
+
+    }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -107,6 +127,11 @@ public class ChatMessagesActivity extends AppCompatActivity {
             return;
         }
 
+        //Check Permissions at runtime
+        int requestCode = 200;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(permissions, requestCode);
+        }
 
 
         initializeScreen();
