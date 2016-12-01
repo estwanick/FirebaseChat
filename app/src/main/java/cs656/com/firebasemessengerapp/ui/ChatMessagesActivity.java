@@ -32,6 +32,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import com.bumptech.glide.Glide;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.ui.database.FirebaseListAdapter;
@@ -62,6 +64,7 @@ import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class ChatMessagesActivity extends AppCompatActivity {
 
@@ -295,11 +298,13 @@ public class ChatMessagesActivity extends AppCompatActivity {
     public void addVoiceToMessages(String voiceLocation){
         final DatabaseReference pushRef = mMessageDatabaseReference.push();
         final String pushKey = pushRef.getKey();
-
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date date = new Date();
+        String timestamp = dateFormat.format(date);
         //Create message object with text/voice etc
         Message message =
                 new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()),
-                        "Message: Voice Sent", "VOICE", voiceLocation);
+                        "Message: Voice Sent", "VOICE", voiceLocation, timestamp);
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
         HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
@@ -319,11 +324,13 @@ public class ChatMessagesActivity extends AppCompatActivity {
     public void addImageToMessages(String imageLocation){
         final DatabaseReference pushRef = mMessageDatabaseReference.push();
         final String pushKey = pushRef.getKey();
-
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date date = new Date();
+        String timestamp = dateFormat.format(date);
         //Create message object with text/voice etc
         Message message =
                 new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()),
-                        "Message: Image Sent", "IMAGE", imageLocation);
+                        "Message: Image Sent", "IMAGE", imageLocation, timestamp);
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
         HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
@@ -346,8 +353,12 @@ public class ChatMessagesActivity extends AppCompatActivity {
         final String pushKey = pushRef.getKey();
 
         String messageString = mMessageField.getText().toString();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        Date date = new Date();
+        String timestamp = dateFormat.format(date);
         //Create message object with text/voice etc
-        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString);
+        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, timestamp);
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
         HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
@@ -369,10 +380,13 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 LinearLayout messageLine = (LinearLayout) view.findViewById(R.id.messageLine);
                 TextView messgaeText = (TextView) view.findViewById(R.id.messageTextView);
                 TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
+                TextView timeTextView = (TextView) view.findViewById(R.id.timeTextView);
                 ImageView leftImage = (ImageView) view.findViewById(R.id.leftMessagePic);
                 ImageView rightImage = (ImageView) view.findViewById(R.id.rightMessagePic);
                 LinearLayout individMessageLayout = (LinearLayout)view.findViewById(R.id.individMessageLayout);
 
+
+                timeTextView.setText(message.getTimestamp());
                 messgaeText.setText(message.getMessage());
                 senderText.setText(message.getSender());
                 //If you sent this message, right align
@@ -384,6 +398,21 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     messageLine.setGravity(Gravity.RIGHT);
                     leftImage.setVisibility(View.GONE);
                     rightImage.setVisibility(View.VISIBLE);
+
+                    //profile image back to here
+                    /*Uri imageUri = mFirebaseAuth.getCurrentUser().getPhotoUrl();
+                    StorageReference storageRef = FirebaseStorage.getInstance()
+                            .getReference().child(imageUri.toString());
+                    Glide.with(view.getContext())
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef)
+                            .into(rightImage);*/
+                    /*Glide.with(view.getContext())
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef)
+                            .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                            .into(rightImage);*/
+
                     individMessageLayout.setBackgroundResource(R.drawable.roundedmessagescolored);
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     //       R.color.colorAccent, null));

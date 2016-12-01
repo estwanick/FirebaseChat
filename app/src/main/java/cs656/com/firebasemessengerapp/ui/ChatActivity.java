@@ -175,7 +175,7 @@ public class ChatActivity extends AppCompatActivity {
         //Create corresponding message location for this chat
         String initialMessage = mFriendsInChat.getText().toString();
         Message initialMessages =
-                new Message("System", initialMessage);
+                new Message("System", initialMessage, "");
         final DatabaseReference initMsgRef =
                 mFirebaseDatabase.getReference(Constants.MESSAGE_LOCATION + "/" + pushKey);
         final DatabaseReference msgPush = initMsgRef.push();
