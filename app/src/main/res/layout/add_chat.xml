@@ -16,7 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorAccent"
+            android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
         </android.support.v7.widget.Toolbar>
@@ -25,7 +25,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/graygradient"
         android:layout_marginTop="?attr/actionBarSize">
         <LinearLayout
             android:layout_marginTop="20dp"
@@ -63,7 +62,6 @@
             android:id="@+id/content_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             tools:context="cs656.com.firebasemessengerapp.MainActivity"
             tools:showIn="@layout/activity_main">
@@ -93,8 +91,6 @@
                 android:layout_height="match_parent"
                 android:stackFromBottom="false"
                 android:layout_below="@+id/FriendsView"
-
-                android:divider="@android:color/transparent"
                 android:transcriptMode="alwaysScroll"
                 tools:listitem="@layout/friend_item"
                 android:layout_alignParentStart="true"

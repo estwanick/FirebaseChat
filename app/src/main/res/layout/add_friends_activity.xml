@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/graygradient"
 
     android:fitsSystemWindows="true"
     tools:context="cs656.com.firebasemessengerapp.ui.FriendsListActivity">
@@ -18,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorAccent"
+            android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -42,7 +41,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:stackFromBottom="false"
-            android:divider="@android:color/transparent"
             android:transcriptMode="alwaysScroll"
             tools:listitem="@layout/friend_item"/>
 
