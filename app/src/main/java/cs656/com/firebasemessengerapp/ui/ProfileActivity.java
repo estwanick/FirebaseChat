@@ -110,6 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Glide.with(mView)
                                 .using(new FirebaseImageLoader())
                                 .load(storageRef)
+                                .bitmapTransform(new CropCircleTransformation(mView))
                                 .into(imageView);
                     }
                 }
