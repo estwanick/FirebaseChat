@@ -28,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -50,9 +51,10 @@ public class ProfileActivity extends AppCompatActivity {
     private StorageReference mStorage;
     private FirebaseAuth mFirebaseAuth;
     private String currentUserEmail;
+    private ImageView profileImage;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mCurrentUserDatabaseReference;
-    private View mView;
+    private Context mView;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
         initializeScreen();
         openImageSelector();
         initializeUserInfo();
+        mView = ProfileActivity.this;
     }
 
     @Override
@@ -102,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         StorageReference storageRef = FirebaseStorage.getInstance()
                                 .getReference().child(imageLocation);
-                        Glide.with(mView.getContext())
+                        Glide.with(mView)
                                 .using(new FirebaseImageLoader())
                                 .load(storageRef)
                                 .into(imageView);
@@ -122,39 +125,24 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType("image/*");
                 startActivityForResult(intent, GALLERY_INTENT);
-                mView = view;
+                //mView = view;
             }
         });
     }
 
     private void initializeUserInfo(){
+        final ImageView imageView = (ImageView) findViewById(R.id.profilePicture);
         mCurrentUserDatabaseReference
-                .addChildEventListener(new ChildEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        final ImageView imageView = (ImageView) findViewById(R.id.profilePicture);
-                        User mUser = dataSnapshot.getValue(User.class); // FIX THIS
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        User user = dataSnapshot.getValue(User.class);
                         StorageReference storageRef = FirebaseStorage.getInstance()
-                                .getReference().child(mUser.getProfilePicLocation());
-                        Glide.with(mView.getContext())
+                                .getReference().child(user.getProfilePicLocation());
+                        Glide.with(mView)
                                 .using(new FirebaseImageLoader())
                                 .load(storageRef)
                                 .into(imageView);
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                     }
 
                     @Override
@@ -167,8 +155,9 @@ public class ProfileActivity extends AppCompatActivity {
     private void initializeScreen(){
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mCurrentUserDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION
-                + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
+        mCurrentUserDatabaseReference = mFirebaseDatabase
+                .getReference().child(Constants.USERS_LOCATION
+                        + "/" +encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
         currentUserEmail = encodeEmail(mFirebaseAuth.getCurrentUser().getEmail());
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setTitle("Profile");
