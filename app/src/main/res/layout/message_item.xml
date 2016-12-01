@@ -50,13 +50,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            tools:text="Message" />
+            tools:text="Message"
+            android:textSize="18sp"
+            android:textStyle="normal|bold" />
         <TextView
             android:id="@+id/senderTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            tools:text="Sender" />
+            tools:text="Sender"
+            android:textSize="12sp" />
 
     </LinearLayout>
     <ImageView
