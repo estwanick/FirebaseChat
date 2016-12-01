@@ -78,6 +78,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessageDatabaseReference;
+    private DatabaseReference mUsersDatabaseReference;
     private FirebaseListAdapter<Message> mMessageListAdapter;
     private FirebaseAuth mFirebaseAuth;
 
@@ -99,6 +100,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
     private boolean permissionToRecordAccepted = false;
     private boolean permissionToWriteAccepted = false;
     private String [] permissions = {"android.permission.RECORD_AUDIO", "android.permission.WRITE_EXTERNAL_STORAGE"};
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -376,13 +378,13 @@ public class ChatMessagesActivity extends AppCompatActivity {
     private void showMessages() {
         mMessageListAdapter = new FirebaseListAdapter<Message>(this, Message.class, R.layout.message_item, mMessageDatabaseReference) {
             @Override
-            protected void populateView(View view, final Message message, final int position) {
+            protected void populateView(final View view, final Message message, final int position) {
                 LinearLayout messageLine = (LinearLayout) view.findViewById(R.id.messageLine);
                 TextView messgaeText = (TextView) view.findViewById(R.id.messageTextView);
                 TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
                 TextView timeTextView = (TextView) view.findViewById(R.id.timeTextView);
-                ImageView leftImage = (ImageView) view.findViewById(R.id.leftMessagePic);
-                ImageView rightImage = (ImageView) view.findViewById(R.id.rightMessagePic);
+                final ImageView leftImage = (ImageView) view.findViewById(R.id.leftMessagePic);
+                final ImageView rightImage = (ImageView) view.findViewById(R.id.rightMessagePic);
                 LinearLayout individMessageLayout = (LinearLayout)view.findViewById(R.id.individMessageLayout);
 
                 //display timestamp correclty
@@ -421,26 +423,32 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     rightImage.setVisibility(View.VISIBLE);
 
                     //profile image back to here
-                    if(mFirebaseAuth.getCurrentUser().getPhotoUrl() != null && mFirebaseAuth.getCurrentUser().getPhotoUrl().toString() != "") {
-                        Uri imageUri = mFirebaseAuth.getCurrentUser().getPhotoUrl();
-                        StorageReference storageRef = FirebaseStorage.getInstance()
-                                .getReference().child(imageUri.toString());
-                    /*Glide.with(view.getContext())
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .into(rightImage);*/
-                        Glide.with(view.getContext())
-                                .using(new FirebaseImageLoader())
-                                .load(storageRef)
-                                .bitmapTransform(new CropCircleTransformation(view.getContext()))
-                                .into(rightImage);
-                    }
+                    mUsersDatabaseReference.child(mSender).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User userInfo = dataSnapshot.getValue(User.class);
+                            StorageReference storageRef = FirebaseStorage.getInstance()
+                                    .getReference().child(userInfo.getProfilePicLocation());
+                            Glide.with(view.getContext())
+                                    .using(new FirebaseImageLoader())
+                                    .load(storageRef)
+                                    .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                                    .into(rightImage);
+                        }
 
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
+                        }
+                    });
 
                     individMessageLayout.setBackgroundResource(R.drawable.roundedmessagescolored);
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     //       R.color.colorAccent, null));
+                }else if(mSender.equals("System")){
+                    messageLine.setGravity(Gravity.CENTER_HORIZONTAL);
+                    leftImage.setVisibility(View.GONE);
+                    rightImage.setVisibility(View.GONE);
                 }else{
                     //messgaeText.setGravity(Gravity.LEFT);
                     //senderText.setGravity(Gravity.LEFT);
@@ -450,6 +458,29 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     individMessageLayout.setBackgroundResource(R.drawable.roundedmessages);
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
                     //       R.color.colorPrimary, null));
+
+
+                    //profile image back to here
+                    mUsersDatabaseReference.child(mSender).addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            User userInfo = dataSnapshot.getValue(User.class);
+                            if(userInfo != null){
+                                StorageReference storageRef = FirebaseStorage.getInstance()
+                                        .getReference().child(userInfo.getProfilePicLocation());
+                                Glide.with(view.getContext())
+                                        .using(new FirebaseImageLoader())
+                                        .load(storageRef)
+                                        .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                                        .into(leftImage);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
 
                 //If this is multimedia display it
@@ -543,6 +574,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
         currentUserEmail = encodeEmail(mFirebaseAuth.getCurrentUser().getEmail());
+        mUsersDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION);
         mMessageDatabaseReference = mFirebaseDatabase.getReference().child(Constants.MESSAGE_LOCATION
                 + "/" + messageId);
 
