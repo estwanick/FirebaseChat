@@ -421,18 +421,22 @@ public class ChatMessagesActivity extends AppCompatActivity {
                     rightImage.setVisibility(View.VISIBLE);
 
                     //profile image back to here
-                    /*Uri imageUri = mFirebaseAuth.getCurrentUser().getPhotoUrl();
-                    StorageReference storageRef = FirebaseStorage.getInstance()
-                            .getReference().child(imageUri.toString());
-                    Glide.with(view.getContext())
-                            .using(new FirebaseImageLoader())
-                            .load(storageRef)
-                            .into(rightImage);*/
+                    if(mFirebaseAuth.getCurrentUser().getPhotoUrl() != null && mFirebaseAuth.getCurrentUser().getPhotoUrl().toString() != "") {
+                        Uri imageUri = mFirebaseAuth.getCurrentUser().getPhotoUrl();
+                        StorageReference storageRef = FirebaseStorage.getInstance()
+                                .getReference().child(imageUri.toString());
                     /*Glide.with(view.getContext())
                             .using(new FirebaseImageLoader())
                             .load(storageRef)
-                            .bitmapTransform(new CropCircleTransformation(view.getContext()))
                             .into(rightImage);*/
+                        Glide.with(view.getContext())
+                                .using(new FirebaseImageLoader())
+                                .load(storageRef)
+                                .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                                .into(rightImage);
+                    }
+
+
 
                     individMessageLayout.setBackgroundResource(R.drawable.roundedmessagescolored);
                     //messgaeText.setBackgroundColor(ResourcesCompat.getColor(getResources(),
