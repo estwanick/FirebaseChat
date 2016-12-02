@@ -388,26 +388,26 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 LinearLayout individMessageLayout = (LinearLayout)view.findViewById(R.id.individMessageLayout);
 
                 //display timestamp correclty
-                String time = message.getTimestamp();
-                if(time != null && time != "" ) {
-                    String ampm = "A.M.";
-                    String hours = time.substring(0, 2);
-                    String minutes = time.substring(3, 5);
-                    int numHours = Integer.parseInt(hours);
-                    if(numHours == 12){ //if numhours is 12 then its pm
-                        ampm = "P.M.";
-                    }
-                    if (numHours > 12) {
-                        numHours -= 12;
-                        ampm = "P.M.";
-                    }
-                    if(numHours == 0){
-                        numHours = 12;
-                    }
-                    hours = Integer.toString(numHours);
-                    time = hours + ":" + minutes + " " + ampm;
-                }
-                timeTextView.setText(time);
+//                String time = message.getTimestamp();
+//                if(time != null && time != "" ) {
+//                    String ampm = "A.M.";
+//                    String hours = time.substring(0, 2);
+//                    String minutes = time.substring(3, 5);
+//                    int numHours = Integer.parseInt(hours);
+//                    if(numHours == 12){ //if numhours is 12 then its pm
+//                        ampm = "P.M.";
+//                    }
+//                    if (numHours > 12) {
+//                        numHours -= 12;
+//                        ampm = "P.M.";
+//                    }
+//                    if(numHours == 0){
+//                        numHours = 12;
+//                    }
+//                    hours = Integer.toString(numHours);
+//                    time = hours + ":" + minutes + " " + ampm;
+//                }
+//                timeTextView.setText(time);
 
                 //set message and sender text
                 messgaeText.setText(message.getMessage());

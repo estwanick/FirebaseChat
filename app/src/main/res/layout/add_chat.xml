@@ -51,7 +51,7 @@
                 android:layout_height="30dp"
                 android:layout_marginRight="15dp"
                 android:id="@+id/createButton"
-                android:background="@mipmap/ic_plus_blue"
+                android:background="@android:drawable/ic_menu_send"
                 android:onClick="createChat" />
         </LinearLayout>
 
