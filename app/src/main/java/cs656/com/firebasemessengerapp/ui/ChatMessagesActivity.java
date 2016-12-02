@@ -427,6 +427,9 @@ public class ChatMessagesActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User userInfo = dataSnapshot.getValue(User.class);
+                            if(userInfo != null && userInfo.getProfilePicLocation() != null){
+
+                            }
                             StorageReference storageRef = FirebaseStorage.getInstance()
                                     .getReference().child(userInfo.getProfilePicLocation());
                             Glide.with(view.getContext())
@@ -465,7 +468,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User userInfo = dataSnapshot.getValue(User.class);
-                            if(userInfo != null){
+                            if(userInfo != null && userInfo.getProfilePicLocation() != null){
                                 StorageReference storageRef = FirebaseStorage.getInstance()
                                         .getReference().child(userInfo.getProfilePicLocation());
                                 Glide.with(view.getContext())

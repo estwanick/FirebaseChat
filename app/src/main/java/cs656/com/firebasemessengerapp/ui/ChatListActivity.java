@@ -138,7 +138,7 @@ public class ChatListActivity extends AppCompatActivity {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         User msgSender = dataSnapshot.getValue(User.class);
-                                        if(msgSender != null){
+                                        if(msgSender != null && msgSender.getProfilePicLocation() != null){
                                             StorageReference storageRef = FirebaseStorage.getInstance()
                                                     .getReference().child(msgSender.getProfilePicLocation());
                                             Glide.with(view.getContext())
