@@ -428,15 +428,14 @@ public class ChatMessagesActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User userInfo = dataSnapshot.getValue(User.class);
                             if(userInfo != null && userInfo.getProfilePicLocation() != null){
-
+                                StorageReference storageRef = FirebaseStorage.getInstance()
+                                        .getReference().child(userInfo.getProfilePicLocation());
+                                Glide.with(view.getContext())
+                                        .using(new FirebaseImageLoader())
+                                        .load(storageRef)
+                                        .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                                        .into(rightImage);
                             }
-                            StorageReference storageRef = FirebaseStorage.getInstance()
-                                    .getReference().child(userInfo.getProfilePicLocation());
-                            Glide.with(view.getContext())
-                                    .using(new FirebaseImageLoader())
-                                    .load(storageRef)
-                                    .bitmapTransform(new CropCircleTransformation(view.getContext()))
-                                    .into(rightImage);
                         }
 
                         @Override
