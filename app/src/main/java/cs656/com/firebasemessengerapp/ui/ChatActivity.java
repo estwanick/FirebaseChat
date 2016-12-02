@@ -8,17 +8,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +36,7 @@ import cs656.com.firebasemessengerapp.model.Friend;
 import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /*
     This view will show a list of the users friends,
@@ -82,6 +88,15 @@ public class ChatActivity extends AppCompatActivity {
                         if(fUser != null){
                             ((TextView) view.findViewById(R.id.messageTextView))
                                     .setText(fUser.getUsername());
+                            if(fUser.getProfilePicLocation() != null && fUser.getProfilePicLocation().length() > 0){
+                                StorageReference storageRef = FirebaseStorage.getInstance()
+                                        .getReference().child(fUser.getProfilePicLocation());
+                                Glide.with(view.getContext())
+                                        .using(new FirebaseImageLoader())
+                                        .load(storageRef)
+                                        .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                                        .into((ImageView)view.findViewById(R.id.photoImageView));
+                            }
                         }else{
                             ((TextView) view.findViewById(R.id.messageTextView))
                                     .setText("A girl has no name");

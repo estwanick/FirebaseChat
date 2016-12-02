@@ -6,10 +6,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +32,7 @@ import cs656.com.firebasemessengerapp.model.Friend;
 import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
+import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class FriendsListActivity extends AppCompatActivity {
 
@@ -67,6 +73,7 @@ public class FriendsListActivity extends AppCompatActivity {
                 final DatabaseReference friendRef =
                         mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
                                 + "/" + mCurrentUserEmail + "/" + encodeEmail(email));
+
                 friendRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -86,6 +93,16 @@ public class FriendsListActivity extends AppCompatActivity {
 
                     }
                 });
+
+                if(user.getProfilePicLocation() != null && user.getProfilePicLocation().length() > 0){
+                    StorageReference storageRef = FirebaseStorage.getInstance()
+                            .getReference().child(user.getProfilePicLocation());
+                    Glide.with(view.getContext())
+                            .using(new FirebaseImageLoader())
+                            .load(storageRef)
+                            .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                            .into((ImageView)view.findViewById(R.id.photoImageView));
+                }
 
                 ((TextView)view.findViewById(R.id.messageTextView)).setText(user.getUsername());
                 ((TextView)view.findViewById(R.id.nameTextView)).setText(email);
