@@ -28,11 +28,11 @@
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="56dp"
+            android:layout_width="100dp"
             app:srcCompat="@drawable/com_facebook_button_like_background"
             android:id="@+id/imageMessage"
             android:visibility="gone"
-            android:layout_height="56dp" />
+            android:layout_height="100dp" />
 
         <ImageButton
             android:layout_width="100dp"
@@ -60,13 +60,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 tools:text="Sender"
-                android:textSize="12sp" />
-            <TextView
-                android:id="@+id/timeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                tools:text="TimeTest"
                 android:textSize="12sp" />
 
     </LinearLayout>

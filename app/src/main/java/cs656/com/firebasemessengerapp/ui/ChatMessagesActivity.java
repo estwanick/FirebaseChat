@@ -382,7 +382,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 LinearLayout messageLine = (LinearLayout) view.findViewById(R.id.messageLine);
                 TextView messgaeText = (TextView) view.findViewById(R.id.messageTextView);
                 TextView senderText = (TextView) view.findViewById(R.id.senderTextView);
-                TextView timeTextView = (TextView) view.findViewById(R.id.timeTextView);
+                //TextView timeTextView = (TextView) view.findViewById(R.id.timeTextView);
                 final ImageView leftImage = (ImageView) view.findViewById(R.id.leftMessagePic);
                 final ImageView rightImage = (ImageView) view.findViewById(R.id.rightMessagePic);
                 LinearLayout individMessageLayout = (LinearLayout)view.findViewById(R.id.individMessageLayout);
@@ -427,15 +427,20 @@ public class ChatMessagesActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User userInfo = dataSnapshot.getValue(User.class);
-                            if(userInfo != null && userInfo.getProfilePicLocation() != null){
-                                StorageReference storageRef = FirebaseStorage.getInstance()
-                                        .getReference().child(userInfo.getProfilePicLocation());
-                                Glide.with(view.getContext())
-                                        .using(new FirebaseImageLoader())
-                                        .load(storageRef)
-                                        .bitmapTransform(new CropCircleTransformation(view.getContext()))
-                                        .into(rightImage);
-                            }
+                            try{
+                                if(userInfo != null && userInfo.getProfilePicLocation() != null){
+                                    StorageReference storageRef = FirebaseStorage.getInstance()
+                                            .getReference().child(userInfo.getProfilePicLocation());
+                                    Glide.with(view.getContext())
+                                            .using(new FirebaseImageLoader())
+                                            .load(storageRef)
+                                            .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                                            .into(rightImage);
+                                }
+                            }catch (Exception e){
+                                Log.e("ERR", e.toString());
+;                            }
+
                         }
 
                         @Override
@@ -468,13 +473,17 @@ public class ChatMessagesActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             User userInfo = dataSnapshot.getValue(User.class);
                             if(userInfo != null && userInfo.getProfilePicLocation() != null){
-                                StorageReference storageRef = FirebaseStorage.getInstance()
-                                        .getReference().child(userInfo.getProfilePicLocation());
-                                Glide.with(view.getContext())
-                                        .using(new FirebaseImageLoader())
-                                        .load(storageRef)
-                                        .bitmapTransform(new CropCircleTransformation(view.getContext()))
-                                        .into(leftImage);
+                                try{
+                                    StorageReference storageRef = FirebaseStorage.getInstance()
+                                            .getReference().child(userInfo.getProfilePicLocation());
+                                    Glide.with(view.getContext())
+                                            .using(new FirebaseImageLoader())
+                                            .load(storageRef)
+                                            .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                                            .into(leftImage);
+                                }catch(Exception e){
+                                    Log.e("Err", e.toString());
+                                }
                             }
                         }
 

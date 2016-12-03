@@ -74,6 +74,11 @@ public class FriendsListActivity extends AppCompatActivity {
                         mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
                                 + "/" + mCurrentUserEmail + "/" + encodeEmail(email));
 
+                if(email.equals(mCurrentUserEmail)){
+                    view.findViewById(R.id.addFriend).setVisibility(View.GONE);
+                    view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
+                }
+
                 friendRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

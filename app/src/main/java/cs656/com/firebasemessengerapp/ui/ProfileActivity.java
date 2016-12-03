@@ -140,16 +140,21 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-                        if(user.getProfilePicLocation() != null){
-                            StorageReference storageRef = FirebaseStorage.getInstance()
-                                    .getReference().child(user.getProfilePicLocation());
+                        try{
+                            if(user.getProfilePicLocation() != null){
+                                StorageReference storageRef = FirebaseStorage.getInstance()
+                                        .getReference().child(user.getProfilePicLocation());
 
-                            Glide.with(mView)
-                                    .using(new FirebaseImageLoader())
-                                    .load(storageRef)
-                                    .bitmapTransform(new CropCircleTransformation(mView))
-                                    .into(imageView);
+                                Glide.with(mView)
+                                        .using(new FirebaseImageLoader())
+                                        .load(storageRef)
+                                        .bitmapTransform(new CropCircleTransformation(mView))
+                                        .into(imageView);
+                            }
+                        }catch (Exception e){
+                            Log.e("Err", "glide");
                         }
+
                     }
 
                     @Override

@@ -115,13 +115,17 @@ public class ChatActivity extends AppCompatActivity {
                             ((TextView) view.findViewById(R.id.messageTextView))
                                     .setText(fUser.getUsername());
                             if(fUser.getProfilePicLocation() != null && fUser.getProfilePicLocation().length() > 0){
-                                StorageReference storageRef = FirebaseStorage.getInstance()
-                                        .getReference().child(fUser.getProfilePicLocation());
-                                Glide.with(view.getContext())
-                                        .using(new FirebaseImageLoader())
-                                        .load(storageRef)
-                                        .bitmapTransform(new CropCircleTransformation(view.getContext()))
-                                        .into((ImageView)view.findViewById(R.id.photoImageView));
+                                try{
+                                    StorageReference storageRef = FirebaseStorage.getInstance()
+                                            .getReference().child(fUser.getProfilePicLocation());
+                                    Glide.with(view.getContext())
+                                            .using(new FirebaseImageLoader())
+                                            .load(storageRef)
+                                            .bitmapTransform(new CropCircleTransformation(view.getContext()))
+                                            .into((ImageView)view.findViewById(R.id.photoImageView));
+                                }catch(Exception e){
+                                    Log.e("Err", e.toString());
+                                }
                             }
                         }else{
                             ((TextView) view.findViewById(R.id.messageTextView))
