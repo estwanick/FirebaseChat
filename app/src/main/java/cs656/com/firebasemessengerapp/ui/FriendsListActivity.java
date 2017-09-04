@@ -68,21 +68,20 @@ public class FriendsListActivity extends AppCompatActivity {
             @Override
             protected void populateView(final View view, User user, final int position) {
                 //Log.e("TAG", user.toString());
+
                 final String email = user.getEmail();
                 //Check if this user is already your friend
                 final DatabaseReference friendRef =
                         mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
                                 + "/" + mCurrentUserEmail + "/" + encodeEmail(email));
 
-                if(email.equals(mCurrentUserEmail)){
-                    view.findViewById(R.id.addFriend).setVisibility(View.GONE);
-                    view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
-                }
-
                 friendRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.getValue() != null){
+                        if(email.equals(mCurrentUserEmail)){
+                            view.findViewById(R.id.addFriend).setVisibility(View.GONE);
+                            view.findViewById(R.id.removeFriend).setVisibility(View.GONE);
+                        }else if(dataSnapshot.getValue() != null){
                             Log.w(TAG, "User is friend");
                             view.findViewById(R.id.addFriend).setVisibility(View.GONE);
                             view.findViewById(R.id.removeFriend).setVisibility(View.VISIBLE);
