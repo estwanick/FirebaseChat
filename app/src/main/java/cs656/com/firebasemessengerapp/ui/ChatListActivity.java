@@ -56,6 +56,7 @@ public class ChatListActivity extends AppCompatActivity {
     private String mUsername;
     private ValueEventListener mValueEventListener;
     private DatabaseReference mUserDatabaseReference;
+    private ImageView addConversationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,10 +95,33 @@ public class ChatListActivity extends AppCompatActivity {
         };
     }
 
-    //TODO: add logic to not show plus button if the user has no friends
     public void createNewChat(View view){
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
+    }
+
+    private void hideShowAddChatButton(FirebaseUser user) {
+        addConversationButton = (ImageView) findViewById(R.id.add_conversation);
+        final String userLoggedIn = user.getEmail();
+        final DatabaseReference friendsCheckRef = mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
+                + "/" + encodeEmail(userLoggedIn));
+        friendsCheckRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long size = dataSnapshot.getChildrenCount();
+                String strLong = Long.toString(size);
+                if (size > 0) {
+                    addConversationButton.setVisibility(View.VISIBLE);
+                } else {
+                    addConversationButton.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void onSignedInInitialize(FirebaseUser user) {
@@ -108,6 +132,8 @@ public class ChatListActivity extends AppCompatActivity {
                         + Constants.CHAT_LOCATION );
         mUserDatabaseReference = mFirebaseDatabase.getReference()
                 .child(Constants.USERS_LOCATION);
+
+         hideShowAddChatButton(user);
 
         //Initialize screen variables
         mChatListView = (ListView) findViewById(R.id.chatListView);
