@@ -39,6 +39,7 @@ import cs656.com.firebasemessengerapp.model.Friend;
 import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
+import cs656.com.firebasemessengerapp.utils.EmailEncoding;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 /*
@@ -105,7 +106,7 @@ public class ChatActivity extends AppCompatActivity {
             protected void populateView(final View view, final String friend, final int position) {
                 Log.e("TAG", friend);
                 final Friend addFriend = new Friend(friend);
-                ((TextView) view.findViewById(R.id.nameTextView)).setText(friend);
+                ((TextView) view.findViewById(R.id.nameTextView)).setText(EmailEncoding.commaDecodePeriod(friend));
 
                 mUserDatabaseRef.child(friend).addValueEventListener(new ValueEventListener() {
                     @Override
@@ -113,7 +114,7 @@ public class ChatActivity extends AppCompatActivity {
                         User fUser = dataSnapshot.getValue(User.class);
                         if(fUser != null){
                             ((TextView) view.findViewById(R.id.messageTextView))
-                                    .setText(fUser.getUsername());
+                                    .setText(EmailEncoding.commaDecodePeriod(fUser.getUsername()));
                             if(fUser.getProfilePicLocation() != null && fUser.getProfilePicLocation().length() > 0){
                                 try{
                                     StorageReference storageRef = FirebaseStorage.getInstance()
@@ -155,7 +156,7 @@ public class ChatActivity extends AppCompatActivity {
                         if(mChat.appendFriend(addFriend)){
                             String friendsString = "";
                             for(Friend f: mChat.getFriends()){
-                                friendsString += f.getEmail() + ", ";
+                                friendsString += EmailEncoding.commaDecodePeriod(f.getEmail()) + ", ";
                             }
                             friendsString = friendsString.substring(0, friendsString.length() - 2);
                             mFriendsInChat.setText("Users added to chat: " + friendsString);
@@ -179,7 +180,7 @@ public class ChatActivity extends AppCompatActivity {
                         if(friendsString.length()>1) {
                             friendsString = friendsString.substring(0, friendsString.length() - 2);
 
-                            mFriendsInChat.setText("Users added to chat: " + friendsString);
+                            mFriendsInChat.setText("Users added to chat: " + EmailEncoding.commaDecodePeriod(friendsString));
                         }else{
                             mFriendsInChat.setText("Users added to chat: ");
                         }
@@ -214,7 +215,7 @@ public class ChatActivity extends AppCompatActivity {
     public void createChat(View view){
         //final String userLoggedIn = mFirebaseAuth.getCurrentUser().getEmail();
         //Log.e(TAG, "User logged in is: " + userLoggedIn);
-        //final String newFriendEncodedEmail = encodeEmail(newFriendEmail);
+        // final String newFriendEncodedEmail = EmailEncoding.commaEncodePeriod(newFriendEmail);
         final DatabaseReference chatRef = mFirebaseDatabase.getReference(Constants.CHAT_LOCATION);
         final DatabaseReference messageRef = mFirebaseDatabase.getReference(Constants.MESSAGE_LOCATION);
         final DatabaseReference pushRef = chatRef.push();
@@ -251,7 +252,7 @@ public class ChatActivity extends AppCompatActivity {
         //Push chat to all friends
         for(Friend f: mChat.getFriends()){
             mFriendDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION
-                    + "/" + encodeEmail(f.getEmail()));
+                    + "/" + EmailEncoding.commaEncodePeriod(f.getEmail()));
             chatItemMap = new HashMap<String, Object>();
             chatItemMap.put("/chats/" + pushKey, chatObj);
             mFriendDatabaseReference.updateChildren(chatItemMap);
@@ -265,20 +266,15 @@ public class ChatActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //TODO: Used in multiple places, should probably move to its own class
-    public static String encodeEmail(String userEmail) {
-        return userEmail.replace(".", ",");
-    }
-
     private void initializeScreen() {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
         mUserDatabaseRef = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION);
         mCurrentUserDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION
-                + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
+                + "/" + EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail()));
         //Eventually this list will filter out users that are already your friend
         mFriendsLocationDatabaseReference = mFirebaseDatabase.getReference().child(Constants.FRIENDS_LOCATION
-            + "/" + encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
+            + "/" + EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail()));
 
         mListView = (ListView) findViewById(R.id.conversationListView);
         //mToolBar = (Toolbar) findViewById(R.id.toolbar);

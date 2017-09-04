@@ -64,6 +64,7 @@ import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
+import cs656.com.firebasemessengerapp.utils.EmailEncoding;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class ChatMessagesActivity extends AppCompatActivity {
@@ -305,7 +306,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         String timestamp = dateFormat.format(date);
         //Create message object with text/voice etc
         Message message =
-                new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()),
+                new Message(EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail()),
                         "Message: Voice Sent", "VOICE", voiceLocation, timestamp);
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
@@ -331,7 +332,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         String timestamp = dateFormat.format(date);
         //Create message object with text/voice etc
         Message message =
-                new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()),
+                new Message(EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail()),
                         "Message: Image Sent", "IMAGE", imageLocation, timestamp);
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
@@ -360,7 +361,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
         Date date = new Date();
         String timestamp = dateFormat.format(date);
         //Create message object with text/voice etc
-        Message message = new Message(encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()), messageString, timestamp);
+        Message message = new Message(EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail()), messageString, timestamp);
         //Create HashMap for Pushing
         HashMap<String, Object> messageItemMap = new HashMap<String, Object>();
         HashMap<String,Object> messageObj = (HashMap<String, Object>) new ObjectMapper()
@@ -411,7 +412,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
                 //set message and sender text
                 messgaeText.setText(message.getMessage());
-                senderText.setText(message.getSender());
+                senderText.setText(EmailEncoding.commaDecodePeriod(message.getSender()));
                 //If you sent this message, right align
                 String mSender = message.getSender();
 
@@ -584,7 +585,7 @@ public class ChatMessagesActivity extends AppCompatActivity {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
-        currentUserEmail = encodeEmail(mFirebaseAuth.getCurrentUser().getEmail());
+        currentUserEmail = EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail());
         mUsersDatabaseReference = mFirebaseDatabase.getReference().child(Constants.USERS_LOCATION);
         mMessageDatabaseReference = mFirebaseDatabase.getReference().child(Constants.MESSAGE_LOCATION
                 + "/" + messageId);
@@ -599,11 +600,6 @@ public class ChatMessagesActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    //TODO: Used in multiple places, should probably move to its own class
-    public String encodeEmail(String userEmail) {
-        return userEmail.replace(".", ",");
     }
 
 }
