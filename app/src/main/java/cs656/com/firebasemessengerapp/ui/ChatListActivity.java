@@ -37,6 +37,7 @@ import cs656.com.firebasemessengerapp.model.Chat;
 import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
+import cs656.com.firebasemessengerapp.utils.EmailEncoding;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
 public class ChatListActivity extends AppCompatActivity {
@@ -56,6 +57,7 @@ public class ChatListActivity extends AppCompatActivity {
     private String mUsername;
     private ValueEventListener mValueEventListener;
     private DatabaseReference mUserDatabaseReference;
+    private ImageView addConversationButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,20 +96,45 @@ public class ChatListActivity extends AppCompatActivity {
         };
     }
 
-    //TODO: add logic to not show plus button if the user has no friends
     public void createNewChat(View view){
         Intent intent = new Intent(this, ChatActivity.class);
         startActivity(intent);
+    }
+
+    private void hideShowAddChatButton(FirebaseUser user) {
+        addConversationButton = (ImageView) findViewById(R.id.add_conversation);
+        final String userLoggedIn = user.getEmail();
+        final DatabaseReference friendsCheckRef = mFirebaseDatabase.getReference(Constants.FRIENDS_LOCATION
+                + "/" + EmailEncoding.commaEncodePeriod(userLoggedIn));
+        friendsCheckRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                long size = dataSnapshot.getChildrenCount();
+                String strLong = Long.toString(size);
+                if (size > 0) {
+                    addConversationButton.setVisibility(View.VISIBLE);
+                } else {
+                    addConversationButton.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void onSignedInInitialize(FirebaseUser user) {
         mUsername = user.getDisplayName();
         mChatDatabaseReference = mFirebaseDatabase.getReference()
                 .child(Constants.USERS_LOCATION
-                        + "/" + encodeEmail(user.getEmail()) + "/"
+                        + "/" + EmailEncoding.commaEncodePeriod(user.getEmail()) + "/"
                         + Constants.CHAT_LOCATION );
         mUserDatabaseReference = mFirebaseDatabase.getReference()
                 .child(Constants.USERS_LOCATION);
+
+         hideShowAddChatButton(user);
 
         //Initialize screen variables
         mChatListView = (ListView) findViewById(R.id.chatListView);
@@ -131,7 +158,7 @@ public class ChatListActivity extends AppCompatActivity {
                     @Override
                     public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                         Message newMsg = dataSnapshot.getValue(Message.class);
-                        latestMessage.setText(newMsg.getSender() + ": " + newMsg.getMessage());
+                        latestMessage.setText(EmailEncoding.commaDecodePeriod(newMsg.getSender()) + ": " + newMsg.getMessage());
 
                         mUserDatabaseReference.child(newMsg.getSender())
                                 .addValueEventListener(new ValueEventListener() {
@@ -276,7 +303,7 @@ public class ChatListActivity extends AppCompatActivity {
 
     private void createUser(FirebaseUser user) {
         final DatabaseReference usersRef = mFirebaseDatabase.getReference(Constants.USERS_LOCATION);
-        final String encodedEmail = encodeEmail(user.getEmail());
+        final String encodedEmail = EmailEncoding.commaEncodePeriod(user.getEmail());
         final DatabaseReference userRef = usersRef.child(encodedEmail);
         final String username = user.getDisplayName();
 
@@ -284,7 +311,7 @@ public class ChatListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() == null) {
-                    User newUser = new User(username, encodeEmail(encodedEmail));
+                    User newUser = new User(username, encodedEmail);
                     userRef.setValue(newUser);
                 }
             }
@@ -296,10 +323,6 @@ public class ChatListActivity extends AppCompatActivity {
         });
 
 
-    }
-    //TODO: Used in multiple places, should probably move to its own class
-    public static String encodeEmail(String userEmail) {
-        return userEmail.replace(".", ",");
     }
 
 }

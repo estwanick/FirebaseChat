@@ -41,6 +41,7 @@ import cs656.com.firebasemessengerapp.R;
 import cs656.com.firebasemessengerapp.model.Message;
 import cs656.com.firebasemessengerapp.model.User;
 import cs656.com.firebasemessengerapp.utils.Constants;
+import cs656.com.firebasemessengerapp.utils.EmailEncoding;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.CropCircleTransformation;
 
@@ -167,10 +168,10 @@ public class ProfileActivity extends AppCompatActivity {
     private void initializeScreen(){
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        currentUserEmail = EmailEncoding.commaEncodePeriod(mFirebaseAuth.getCurrentUser().getEmail());
         mCurrentUserDatabaseReference = mFirebaseDatabase
                 .getReference().child(Constants.USERS_LOCATION
-                        + "/" +encodeEmail(mFirebaseAuth.getCurrentUser().getEmail()));
-        currentUserEmail = encodeEmail(mFirebaseAuth.getCurrentUser().getEmail());
+                        + "/" + currentUserEmail);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setTitle("Profile");
         setSupportActionBar(mToolBar);
@@ -182,11 +183,6 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    //TODO: Used in multiple places, should probably move to its own class
-    public String encodeEmail(String userEmail) {
-        return userEmail.replace(".", ",");
     }
 
 }
